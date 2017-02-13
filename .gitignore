@@ -2,6 +2,7 @@
 .idea/ufscar-ammd-2016-2.iml
 
 *.aux
+*.bll
 *.blg
 *.fdb_latexmk
 *.fls
