@@ -273,42 +273,42 @@ Resumo}\vspace{0.5ex}\begin{quote}}{\par\end{quote}\vskip 1ex}
 %       \citeyear{key}
 %               which produces the year information only
 
-\def\leftcite{\@up[}\def\rightcite{\@up]}
+%\def\leftcite{\@up[}\def\rightcite{\@up]}
 
-\def\cite{\def\citeauthoryear##1##2{\def\@thisauthor{##1}%
-             \ifx \@lastauthor \@thisauthor \relax \else##1, \fi ##2}\@icite}
-\def\shortcite{\def\citeauthoryear##1##2{##2}\@icite}
+%\def\cite{\def\citeauthoryear##1##2{\def\@thisauthor{##1}%
+%             \ifx \@lastauthor \@thisauthor \relax \else##1, \fi ##2}\@icite}
+%\def\shortcite{\def\citeauthoryear##1##2{##2}\@icite}
 
-\def\citeauthor{\def\citeauthoryear##1##2{##1}\@nbcite}
-\def\citeyear{\def\citeauthoryear##1##2{##2}\@nbcite}
+%\def\citeauthor{\def\citeauthoryear##1##2{##1}\@nbcite}
+%\def\citeyear{\def\citeauthoryear##1##2{##2}\@nbcite}
 
 % internal macro for citations with [] and with breaks between citations
 % used in \cite and \shortcite
-\def\@icite{\leavevmode\def\@citeseppen{-1000}%
- \def\@cite##1##2{\leftcite\nobreak\hskip 0in{##1\if@tempswa , ##2\fi}\rightcite}%
- \@ifnextchar [{\@tempswatrue\@citex}{\@tempswafalse\@citex[]}}
+%\def\@icite{\leavevmode\def\@citeseppen{-1000}%
+% \def\@cite##1##2{\leftcite\nobreak\hskip 0in{##1\if@tempswa , ##2\fi}\rightcite}%
+% \@ifnextchar [{\@tempswatrue\@citex}{\@tempswafalse\@citex[]}}
 % internal macro for citations without [] and with no breaks
 % used in \citeauthor and \citeyear
-\def\@nbcite{\leavevmode\def\@citeseppen{1000}%
- \def\@cite##1##2{{##1\if@tempswa , ##2\fi}}%
- \@ifnextchar [{\@tempswatrue\@citex}{\@tempswafalse\@citex[]}}
+%\def\@nbcite{\leavevmode\def\@citeseppen{1000}%
+% \def\@cite##1##2{{##1\if@tempswa , ##2\fi}}%
+% \@ifnextchar [{\@tempswatrue\@citex}{\@tempswafalse\@citex[]}}
 
 % don't box citations, separate with ; and a space
 % also, make the penalty between citations a parameter, 
 % it may be a good place to break
-\def\@citex[#1]#2{%
-  \def\@lastauthor{}\def\@citea{}%
-  \@cite{\@for\@citeb:=#2\do
-    {\@citea\def\@citea{;\penalty\@citeseppen\ }%
-     \if@filesw\immediate\write\@auxout{\string\citation{\@citeb}}\fi
-     \@ifundefined{b@\@citeb}{\def\@thisauthor{}{\bf ?}\@warning
-       {Citation `\@citeb' on page \thepage \space undefined}}%
-     {\csname b@\@citeb\endcsname}\let\@lastauthor\@thisauthor}}{#1}}
+%\def\@citex[#1]#2{%
+%  \def\@lastauthor{}\def\@citea{}%
+%  \@cite{\@for\@citeb:=#2\do
+%    {\@citea\def\@citea{;\penalty\@citeseppen\ }%
+%     \if@filesw\immediate\write\@auxout{\string\citation{\@citeb}}\fi
+%     \@ifundefined{b@\@citeb}{\def\@thisauthor{}{\bf ?}\@warning
+%       {Citation `\@citeb' on page \thepage \space undefined}}%
+%     {\csname b@\@citeb\endcsname}\let\@lastauthor\@thisauthor}}{#1}}
 
 % raise the brackets in bibliography labels
-\def\@biblabel#1{\def\citeauthoryear##1##2{##1, ##2}\@up{[}#1\@up{]}\hfill}
+%\def\@biblabel#1{\def\citeauthoryear##1##2{##1, ##2}\@up{[}#1\@up{]}\hfill}
 
-\def\@up#1{\leavevmode\raise.2ex\hbox{#1}}
+%\def\@up#1{\leavevmode\raise.2ex\hbox{#1}}
 
 % Optional changes
 
