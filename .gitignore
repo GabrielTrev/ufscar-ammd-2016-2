@@ -1,2 +1,10 @@
 *.xml
 .idea/ufscar-ammd-2016-2.iml
+
+*.aux
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.pdf
+*.synctex.gz
