@@ -1,5 +1,5 @@
 SRC=main
-OBJ=*.aux *.idx *.log *.lot *.pdf *.toc *.bak
+OBJ=*.aux *.bbl *.idx *.log *.lot *.pdf *.toc *.bak
 
 RM=rm -f
 
