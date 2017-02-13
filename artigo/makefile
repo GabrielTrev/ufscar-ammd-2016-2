@@ -1,5 +1,10 @@
+SRC=main
+OBJ=*.aux *.idx *.log *.lot *.pdf *.toc *.bak
+
+RM=rm -f
+
 build:
-	pdflatex main && pdflatex main
+	pdflatex $(SRC) && bibtex $(SRC) && pdflatex $(SRC) && pdflatex $(SRC)
 
 clean:
-	rm -f main.aux main.idx main.log main.lot main.pdf main.toc main.bak
+	$(RM) $(OBJ)
