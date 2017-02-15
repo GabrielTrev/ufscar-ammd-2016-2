@@ -77,89 +77,76 @@ onde o aprendiz se prende demais aos exemplos existentes e é incapaz de general
 Outra característica é o viés indutivo, que é a estratégia utilizada para selecionar a
 hipótese mais provável dentro do espaço de hipóteses possíveis para o algoritmo.
 
-\section{Fundamentos teóricos}
+\section{Fundamentação teórica}
 
-Nessa seção, serão discutidos alguns aspectos teóricos dos algoritmos que serão examinados nesse trabalho.
-Os algoritmos utilizados podem ser divididos em duas categorias: a de aprendizado supervisionado e de aprendizado não supervisionado.
-Dentre os algoritmos utilizados, árvore de decisão, {\it Naive Bayes} e regressão são algoritmos de aprendizado supervisionado e os algoritmos de agrupamento (k-Means e {\it Expectation Maximization}) são de aprendizado não supervisionado.
-
-Alguns dos aspectos que serão analisados nesse trabalho para cada algoritmo são séries temporais, o viés indutivo do algoritmo e sua sensibilidade a hiperparâmetros.
+Nessa seção, serão discutidos alguns aspectos teóricos dos algoritmos que serão examinados nesse trabalho,
+e uma visão geral de alguns conceitos fundamentais para essa discussão.
+Além de uma visão geral da ideia por trás de cada algoritmo,
+entraremos em detalhes sobre o comportamento de cada algoritmo em séries temporais (para os algoritmos supervisionados),
+o viés indutivo de cada um, e sua sensibilidade a hiperparâmetros.
 
 O processo de aprendizado de máquina geralmente envolve a extração de informações mais gerais acerca de um evento com base em um conjunto de instâncias conhecidas desse evento.
 Em lógica, o processo de se obter conhecimentos gerais a partir de exemplos específicos é denominado indução.
 Como, em geral, um conjunto de instâncias não é suficiente para generalizar todos os casos possíveis,
 deve-se haver um conjunto de pressuposições acerca do problema que permitam a generalização.
-Em aprendizado de máquina, esse conjunto de pressuposições é chamado de viés indutivo do algoritmo.
+Categorizamos essas pressuposições em duas formas, o viés de linguagem e o viés indutivo.
 
-Há vários tipos de viés indutivo para os algoritmos de aprendizado de máquina.
-Exemplos são o viés de busca, ou de preferência e o viés de linguagem, ou restrição.
-O viés indutivo de cada algoritmo apresentado será discutido nessa seção.
+O viés de linguagem trata da representação do problema e sua solução;
+por exemplo, os algoritmos de árvore de decisão representam a solução através de uma árvore,
+e o {\it Naïve-Bayes} representa a solução através de uma equação da máxima {\it a posteriori}.
+Muitas vezes, a representação do problema é incapaz de representar todas as possíveis hipóteses da solução,
+como as árvores de decisão são incapazes de representar hipóteses que usam combinações lineares dos atributos,
+enquanto uma regressão linear é capaz de representar essa combinação.
+
+Já o viés indutivo é mais relacionado à computabilidade e utilidade,
+e são as formas heurísticas do algoritmo escolher uma determinada hipótese sobre outra,
+ambas representáveis em sua linguagem.
+Por exemplo, para uma árvore de decisão sobre três atributos binários, de profundidade exatamente três,
+existem $2^3 = 8$ possíveis árvores, mas geralmente só uma é considerada.
+Uma das formas que os algoritmos de árvore de decisão usam para escolher essa árvore ``melhor''
+é através da entropia, como veremos adiante.
+Um algoritmo sem viés indutivo produziria como resultado um número exponencial ou até infinito
+de possíveis hipóteses, trazendo pouca informação real sobre o problema,
+e muitas vezes impossibilitando o cálculo dos resultados.
 
 Na terminologia de aprendizado de máquina, hiperparâmetros são características do algoritmo de aprendizado de máquina,
 não inferidos do conjunto de dados de treinamento, que influenciam diretamente no desempenho do algoritmo de aprendizado de máquina.
 Quanto mais sensível a hiperparâmetros for um algoritmo, mais seu desempenho será afetado pelos valores desses hiperparâmetros.
-
+Hiperparâmetros podem ser opcionais ou obrigatórios, sendo que os opcionais simplesmente possuem uma forma heurística
+de decisão sobre seu valor.
 É comum que se faça uma otimização desses hiperparâmetros para cada problema que se deseja resolver,
-já que a configuração ótima geralmente se altera de um problema para o outro.
+já que a configuração ótima se altera de um problema para o outro.
 
-\subsection{Algoritmos supervisionados}
-
-Em algoritmos de dados supervisionado, é dado um conjunto de dados de treinamento rotulados para o algoritmo.
-As variáveis não rótulo são denominadas atributos e a variável rótulo é comumente chamada de variável alvo, ou variável resposta.
-O objetivo dos algoritmos de aprendizado supervisionado é determinar a relação existente entre os atributos e a variável alvo,
-de forma a predizer o valor da variável alvo para um dado não rotulado.
-A função que relaciona os atributos e a variável alvo é denominada função hipótese.
-
-Os elementos do conjunto de dados de treinamento são também chamados de instâncias e são comumente representados por vetores de atributos.
-É comum denominar-se a tarefa de aprendizado supervisionado de classificação, quando a variável alvo é discreta, e de regressão, quando a variável alvo é contínua.
 
 \subsubsection{Árvore de Decisão}
 
-O algoritmo de árvore de decisão é um algoritmo simbólico de classificação, em que a variável alvo geralmente possui duas classes.
-Nesse algoritmo, cada valor de atributo ou da variável alvo é visto como uma expressão lógica, de forma que cada instância é vista como uma conjunção de expressões lógicas.
+O algoritmo de árvore de decisão é um algoritmo simbólico de classificação,
+muito utilizado pela sua alta interpretabilidade e fácil computação.
+Nesse algoritmo, cada valor de atributo ou da variável alvo é visto como uma expressão lógica,
+de forma que cada instância é vista como uma conjunção de expressões lógicas.
 
-A saída do algoritmo é uma árvore de decisão, que pode ser vista como um conjunto de regras que determinam associam um valor da saída para cada conjunção de entradas.
-Essa árvore é obtida a partir do conjunto de dados de treinamento, verificando-se as frequências dos valores dos atributos com relação aos valores da variável alvo.
+A saída do algoritmo é uma árvore de decisão,
+que pode ser vista como um conjunto de regras que associam um valor de saída (classe) para cada conjunção de entrada.
+Essa árvore é obtida a partir do conjunto de dados de treinamento,
+verificando-se as frequências dos valores dos atributos com relação aos valores da variável alvo.
 
-Os algoritmos de árvore de decisão vistos durante a disciplina foram o ID3 e o C4.5.
-Ambos os algoritmos utilizam métricas com base na entropia para a determinação da ordem da colocação dos atributos na árvore.
-No caso do ID3, utiliza-se o ganho de informação, enquanto no caso do C4.5, utiliza-se a razão de informação.
+Diversos algoritmos existem para a criação dessas árvores, como o ID3, C4.5 e CART.
+Embora algumas poucas características mudem entre eles, o funcionamento é bastante similar.
+Para simplificar a explicação teórica, utilizaremos o ID3,
+embora na prática utilizemos o CART, como implementado na biblioteca {\it scikit-learn}.
 
-A entropia pode ser vista como uma medida da quantidade de informação sobre a classe que pode ser obtida a partir de um conjunto de dados.
-Seja $S$ um conjunto de amostras, $p^+$ a proporção de exemplos positivos de um evento nessa amostra e $p^-$ a proporção de eventos negativos dessa amostra.
-A entropia desse conjunto é definida por:
+Para que a árvore seja criada, uma métrica é associada a cada atributo da base de dados,
+métrica essa sendo o viés indutivo do algoritmo.
+No caso do ID3, a métrica utilizada é o ganho de informação, definida em função da entropia do conjunto.
+A entropia é uma medida de dissimilaridade entre o conjunto real e sua ordenação perfeita,
+e pode ser calculada como $H(S) = -(p_+ \log_2(p_+)) - (p_- \log_2(p_-))$ no caso de classificação binária,
+onde $p_+$ é a proporção de elementos da classe positiva e $p_-$ a proporção de exemplos da classe negativa.
+Devido a algumas deficiências da entropia, como atributos com muitos valores possíveis,
+geralmente a métrica é um pouco mais modificado, utilizando valores como o ganho de informação,
+razão do ganho de informação, ou a métrica Gini.
+\cite{classification-and-regression-trees}.
 
-\begin{equation}
-\mathrm{Entropia}(S) = -(p^+ \log_2(p^+)) - (p^- \log_2(p^-))
-\end{equation}
-
-O valor da entropia varia entre 0 e 1 e é menor quanto menos igualmente distribuído for o conjunto de dados com relação à classe.
-O ganho de informação e a razão de informação são métricas que buscam indicar o atributo que fornece mais informação sobre a classe,
-ou seja, o atributo que, em média, quando se dividir a árvore em ramos, mais diminuirá a entropia do conjunto.
-A razão de informação leva também em conta atributos com muitos valores, dividindo-se o ganho pela informação intrínseca({\it split information}) de cada atributo.
-
-Seja $S$ um conjunto de dados, $A$ um atributo, $V(A)$ o conjunto de valores possíveis desse atributo e $S_{Av}$ o subconjunto de $S$ em que atributo $A$ possui valor $v \in V(A)$.
-Então, o ganho de informação e a razão de informação do atributo $A$, com relação ao conjunto $S$, são definidos por:
-
-\small
-\begin{equation}
-\mathrm{Ganho}(S,A)=\mathrm{Entropia}(S)-\sum_{v \in V(A)}\frac{\left|S_{Av}\right|}{\left|S\right|} \mathrm{Entropia}(S_{Av})
-\end{equation}
-
-\begin{equation}
-\mathrm{Razao}(S,A)=\frac{\mathrm{Ganho}(S,A)}{\mathrm{SplitInformation}(S,A)}
-\end{equation}
-
-\begin{equation}
-{\tiny \mathrm{SplitInformation}(S,A) = -\sum_{v\in V(A)} \frac{\left|S_{Av}\right|}{\left|S\right|} \log_2\left(\frac{\left|S_{Av}\right|}{\left|S\right|}\right)}
-\end{equation}
-\normalsize
-
-Tanto o algoritmo ID3 como o algoritmo C4.5 utilizam uma estratégia de subida de encosta para a determinação dos atributos dos nós,
-em que, uma vez determinado o atributo de um nó, o algoritmo continua para suas subárvores, sem retornar para esse nó.
-
-O algoritmo C4.5 também possui um mecanismo de poda, que busca eliminar ramos da árvore que fornecem menos informações para a classificação das instâncias.
-
+Alguns dos algoritmos também possuem um mecanismo de poda, que busca eliminar ramos da árvore que fornecem menos informações para a classificação das instâncias.
 Há diversas maneiras de realizar a poda em árvores de decisão,
 uma delas consiste em separar um conjunto de dados de teste,
 representar a árvore de decisão como um conjunto de regras do tipo se então,
@@ -167,20 +154,23 @@ em seguida, para cada antecedente de cada regra, comparar o desempenho da árvor
 retirando-se esse antecedente. Caso o desempenho da árvore melhore, esse antecedente é retirado da regra.
 Isso diminui o tamanho dos ramos da árvore de decisão, tornando-a menos suscetível ao {\it overfitting}.
 
-Tanto no algoritmo ID3 quanto no C4.5,
-verifica-se uma tendência de escolha de árvores mais curtas.
-Isso se à escolha dos atributos dos nós, que é feita com base nos nós que fornecem mais informação sobre a classe.
-Os algoritmos seguem a estratégia de subida de encosta,
-já que, após escolhido um nó, o algoritmo segue para suas subárvores, não retornando mais a esse nó.
+Em vários dos algoritmos, ainda existe uma tendência para a escolha de árvores mais curtas,
+que também faz parte do viés indutivo dos algoritmos.
+Essa escolha é baseada no princípio da navalha de Occam,
+que afirma que modelos mais simples são geralmente mais efetivos.
+Uma árvore mais curta é, de fato, menos sensível ao {\it overfitting}
+devido ao viés de linguagem, pois a representação possibilita menos hipóteses possíveis.
 
-Enquanto essa estratégia não necessariamente retorna a menor árvore possível, a árvore encontrada é geralmente uma das menores possíveis. Dessa forma, diz-se que os algoritmos ID3 e C4.5 possuem um viés de busca, ou preferência, já que dão preferência a árvores mais curtas, ou seja, hipóteses mais simples. 
+Sobre os hiperparâmetros, as árvores de decisão são geralmente chamadas de algoritmos não-paramétricos.
+No entanto, algumas das características que são assumidas por certas versões podem ser manipuladas
+a fim de alterar o funcionamento do algoritmo.
+Por exemplo, a utilização da poda, e qual forma de poda é utilizada,
+podem alterar significativamente o modelo gerado pelo algoritmo.
+Algumas implementações ainda permitem a mudança do critério de escolha de atributos,
+por exemplo alterando entre a entropia e o Gini.
+Um critério bastante utilizado e limitar a profundidade máxima da árvore,
+forçando a geração de modelos mais simples e fáceis de serem interpretados.
 
-A preferência por hipóteses mais curtas (comumente chamada na literatura de navalha de Occam) permite que o algoritmo generalize melhor para dados não vistos,
-já que hipóteses mais longas tendem a ser mais específicas para o conjunto de dados.
-
-Um hiperparâmetro de importância para a árvore de decisão é a utilização ou não da poda e qual forma de poda é utilizada;
-outro hiperparâmetro importante quando lidando com atributos contínuos ou com um domínio muito grande é a discretização feita para esses atributos,
-já que ela determina a ramificação da árvore.
 
 \subsubsection{{\b \it Naive Bayes}}
 
