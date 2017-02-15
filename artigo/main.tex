@@ -296,6 +296,19 @@ A ideia dele é que elementos próximos, segundo uma função distância, são p
 
 
 
+O K-Means é um algoritmo iterativo de aprendizado não supervisionado usado em tarefas de agrupamento para situações onde se conhece o número de "clusters" a se dividir o conjunto de dados. Basicamente,sua ideia consiste em definir o número k de grupos a serem obtidos e três vetores, chamados de "centroides", que representem o centro desses grupos de forma a servirem como referência na construção dos "clusters" pelo algoritmo. Definidos os "centroides", deve-se para cada instância de treinamento (com componentes reais) calcular a distância, por exemplo a distância Euclidiana, em relação aos k "centroides" previamente definidos, ficando a instância pertencente o grupo do "centroide" mais próximo. Deve-se repetir este passo, recalculando os centroides com as novas instâncias, até que se encontre convergência no agrupamento, ou seja, que não ocorra mais mudanças de "clusters" entre as instâncias. Esta convergência não necessariamente será encontrada de forma viável, podendo heurísticas ou aproximações serem utilizadas. Os passos básicos deste algoritmo estão abaixo.
+
+	Passo 1) Definir os K centroides iniciais.
+	Passo 2) Para cada instância, inseri-lá no grupo de centroide mais próximo.
+	Passo 3) Recalcular os K centroides com as novas instâncias integrantes do "cluster"
+	Passo 4) Repetir passos 2 e 3 até que não ocorra mais modificação de "clusters".
+
+O K-Means pode ser resumido como uma busca pela minimização de uma função objetivo, por exemplo em relação ao erro quadrático entre uma instância de treinamento X e os "centroides" dos grupos, de forma que para cada um dos K grupos e para cada uma das n instâncias de treinamento, obtém-se o menor erro quadrático em relação à distância de uma dada instância a um dado centroide, de forma que cada instância integre o "cluster" de centro mais próximo. Um exemplo de função F a ser minimizada seria:
+
+\begin{equation}
+F = \sum_{j=1}^{K} \sum_{i=1}^{n} {|{x}_{i}^{j} - c_{j}|}^2
+\end{equation}
+
 \subsubsection{{\b \it Expectation Maximization}}
 
 \section{Experimentos e Resultados}
