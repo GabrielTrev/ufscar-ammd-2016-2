@@ -71,12 +71,12 @@ def calculate_accuracy(correct_clusters, ordered_points, ordered_labels):
 if __name__ == '__main__':
     # Dem configs
     centroids = [(0, 0), (10, 0), (0, 10), (10, 10), (5, 5)]
-    kmeans_number_of_clusters_to_try = [3, 4, 5, 6, 7]
+    number_of_clusters_to_try = [3, 4, 5, 6, 7]
     # The number of dimensions we'are playing with
     num_dimensions = len(centroids[0])
     # When creating a cluster, points are created in a radius this big around a centroid
     cluster_radius = 3
-    num_elements_per_cluster = 8
+    num_elements_per_cluster = 15
     seed = 0
     centroids = set(centroids)
 
@@ -114,7 +114,7 @@ if __name__ == '__main__':
         plt.savefig("all_points.png", bbox_inches="tight")
 
     # Use KMeans to find dem clusters
-    for cluster_count in kmeans_number_of_clusters_to_try:
+    for cluster_count in number_of_clusters_to_try:
         kmeans = KMeans(n_clusters=cluster_count, random_state=0)
         kmeans.fit(all_points)
 
@@ -125,7 +125,8 @@ if __name__ == '__main__':
 
         # Again, if we're workin in 2d:
         # Plot all dem points, coloring with kmeans colors
-        fig = create_fig()
-        ax = fig.add_subplot(1, 1, 1)
-        ax.scatter(x, y, c=labels)
-        plt.savefig(f"kmeans{cluster_count}.png", bbox_inches="tight")
+        if num_dimensions == 2:
+            fig = create_fig()
+            ax = fig.add_subplot(1, 1, 1)
+            ax.scatter(x, y, c=labels)
+            plt.savefig(f"kmeans{cluster_count}.png", bbox_inches="tight")

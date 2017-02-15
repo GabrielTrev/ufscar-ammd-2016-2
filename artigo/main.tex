@@ -225,9 +225,24 @@ Para se evitar isso, é comum que se utilize algum tipo de suavização, por exe
 
 \subsubsection{Regressão}
 
-\subsection{Algoritmos não Supervisionados}
+Regressão é uma técnica da Estatística cujo objetivo consiste em inferir a relação entre uma variável dependente com outras variáveis independentes.Em outras palavras, um conjunto de variáveis explicam outra variável, permitindo a descrição de um conjunto de dados.
 
-\subsubsection{{\b \it k-Means}}
+Em Aprendizado de Máquina, Regressão consiste em um problema canônico, ajudando a predizer um valor real de uma dada instância a partir de um conjunto de instâncias de treinamento. As tarefas de Regressão integram o chamado Aprendizado Supervisionado, sendo as técnicas divididas em dois grandes grupos: regressão linear e regressão não-linear. A regressão linear tem uma função linear de relação entre a variável resposta e as variáveis explicatórias, enquanto que a regressão não-linear tem uma função não-linear.
+
+Uma possível área de aplicação de Regressão e de Aprendizado de Máquina ocorre em aplicações envolvendo séries temporais.Uma série temporal pode ser entendida basicamente como uma coleção de observações feitas sequencialmente ao longo de um intervalo de tempo. Assim, entender a relação entre observações vizinhas no tempo é um problema crucial.Aplicações destes conceitos vão desde áreas de finanças, economia, medicina, física, entre outras.
+
+\subsection{Algoritmos não-Supervisionados}
+
+Algoritmos não-supervisionados são utilizados em aplicações de aprendizado não-supervisionado, onde o conjunto de instâncias de treinamento não possui rótulos associados como em tarefas supervisionadas. Desta forma, estes algoritmos devem aprender padrões e relações entre um conjunto de instâncias não rotuladas.
+
+Como já dito anteriormente, duas tarefas canônicas em aprendizado não-supervisionado são agrupamento e regras de associação. Redes neurais também podem se enquadrar neste tipo de aprendizado. Em tarefas de agrupamento dezenas de algoritmos encontram-se disponíveis, variando desde a estratégia usada para agrupar até em relação às características do conjunto de dados. Destacam-se algoritmos baseados em densidade, como o DBSCAN, em conectividade, como o K-Means e em distribuição como o Expectation-Maximization.Para tarefas relacionadas à regras de associação, os algoritmos mais populares são o Apriori, o Eclat e o FP-growth.  
+
+\subsubsection{{\b \it K-Means}}
+K-Means é um algoritmo de clustering com uma abordagem geométrica.
+A ideia dele é que elementos próximos, segundo uma função distância, são parecidos e, portanto, pertencem a um mesmo cluster.
+É importante observar que a versão original do K-Means só tem garantia de convergencia se a função distância utilizada for a euclidiana.
+
+
 
 \subsubsection{{\b \it Expectation Maximization}}
 
