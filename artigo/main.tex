@@ -184,96 +184,44 @@ já que ela determina a ramificação da árvore.
 
 \subsubsection{{\b \it Naive Bayes}}
 
-O algoritmo de {\it Naive Bayes} é um algoritmo probabilístico de classificação.
-Ele utiliza o teorema de Bayes e a pressuposição de independência dos atributos, dada a classe,
-para estimar a probabilidade de cada classe a partir do conjunto de treinamento,
-dos atributos do dado observado e de algum conhecimento a priori sobre a distribuição da classe.
+O algoritmo de {\it Naive Bayes} é um algoritmo probabilístico de classificação. Ele utiliza o teorema de Bayes e a pressuposição de independência condicional dos atributos dada a classe para estimar a probabilidade de cada classe a partir do conjunto de treinamento, dos atributos do dado observado e de algum conhecimento a priori sobre a distribuição da classe.
 
-O {\it Naive Bayes} é geralmente é considerado um algoritmo {\it lazy} por não ser necessária a construção de um modelo,
-ainda que um modelo probabilístico seja gerado.
-Em contrapartida, o algoritmo de árvore de decisão mencionado acima é considerado um algoritmo {\it eager}, pois gera um modelo, sendo a árvore o modelo gerado.
+O {\it Naive Bayes} é geralmente é considerado um algoritmo {\it lazy} por não ser necessária a construção de um modelo, ainda que um modelo probabilístico seja gerado. Em contrapartida, o algoritmo de árvore de decisão mencionado acima é considerado um algoritmo {\it eager}, pois gera um modelo, sendo a árvore o modelo gerado.
 
-Dessa forma, o algoritmo de {\it Naive Bayes} deve ser generalizado toda vez que um dado de entrada é recebido.
-Isso faz com que o tempo de treinamento seja reduzido, porém gasta-se mais tempo na classificação.
+Dessa forma, o algoritmo de {\it Naive Bayes} deve ser generalizado toda vez que um dado de entrada é recebido. Isso faz com que o tempo de treinamento seja reduzido, porém gasta-se mais tempo na classificação. A pressuposição de independência condicional entre os atributos dada a classe torna o processo de classificação mais rápido.
 
-Para se determinar a probabilidade da classe, dados os atributos observados (posteriori),
-sabendo-se, de antemão, a distribuição da classe (priori), utiliza-se o teorema de Bayes.
-Seja $h \in H$ uma hipótese possível em um espaço de hipóteses $H$,
-$D \in \mathcal{D}$ os atributos do dado observado, pertencentes ao espaço de atributos $\mathcal{D}$,
-então, a probabilidade da hipótese condicionada pelos atributos é dada por:
+O classificador {\it Naive Bayes} funciona da seguinte forma: tendo-se o conjunto de dados de treinamento e dada uma instância não classificada, o classificador irá atribuir a essa instância a classe que obtiver a maior probabilidade, dados os atributos da instância, a partir do conjunto de dados de treinamento. Essa probabilidade é denominada posteriori. Dados os atributos $D$ e uma hipótese $h$, a posteriori é dada por:
 
 \begin{equation}
 P(h|D) = \frac{P(D|h) P(h)}{P(D)}
 \end{equation}
 
-Considerando-se a hipótese como sendo a classe $c_j \in C$
-atribuída ao dado observado, pertencente ao conjunto de classes $C$, e $D$ um vetor de atributos $D = (a_1,a_2,\cdots,a_n)$, tem-se:
-
-\begin{equation}
-P(c_j|a_1,a_2,\cdots,a_n) = \frac{P(a_1,a_2,\cdots,a_n|c_j) P(c_j)}{P(a_1,a_2,\cdots,a_n)}
-\end{equation}
-
-Dessa forma, a hipótese de máximo a posteriori pode ser determinada obtendo-se o valor de $c_j$ que maximize a expressão acima.
-Como o denominador é constante com relação a $c_j$, encontra-se:
-
-\begin {equation}
-c_{j_{MAP}} = \operatorname*{arg\,max}_{c_j \in C} P(a_1,a_2,\cdots,a_n|c_j) P(c_j)
-\end {equation}
-
-O termo $P(a_1,a_2,\cdots,a_n|c_j)$ pode ser expandido da seguinte forma:
-
-\small
-\begin {multline}
-P(a_1,a_2,\cdots,a_n|c_j) = \\
-= P(a_1|a_2,a_3,\cdots,a_n,c_j) P(a_2|a_3,\cdots,a_n,c_j) \cdots P(a_n|c_j)
-\end{multline}
-\normalsize
-
-O número de operações necessárias para determinar a probabilidade acima ou a quantidade de memória necessária para armazenar essas probabilidades de antemão cresce muito rapidamente em relação à quantidade de variáveis,
-o que torna a determinação do máximo a posteriori inviável computacionalmente.
-
-O {\it Naive Bayes} resolve esse problema assumindo independência condicional entre os atributos,
-dada a classe, ou seja, a probabilidade da conjunção de $n$ atributos,
-dada a classe é igual ao produto das probabilidades de cada atributo, dada a classe. Dessa forma:
+Chama-se de hipótese de máximo a posteriori a hipótese que maximiza a expressão dada acima. Considerando-se a hipótese como sendo a classe $c \in C$, os atributos como sendo o vetor $D = (a_1,a_2,\cdots,a_n)$ e o conjunto $C$ como sendo o conjunto de classes, então a classe que maximiza a posteriori será dada por:
 
 \begin{multline}
-P(x_k|x_{k+1},\cdots,x_n|c_j) = \frac{P(x_k,\cdots,x_n,c_j)}{P(x_{k+1},\cdots,x_n,c_j)} \\
-= \frac{P(x_k,\cdots,x_n|c_j) P(c_j)}{P(x_{k+1},\cdots,x_n|c_j) P(c_j)} = \frac{P(x_k,\cdots,x_n|c_j)}{P(x_{k+1},\cdots,x_n|c_j)} \\
-= P(x_k|c_j)
+c_{MAP} = \operatorname*{arg\,max}_{c \in C} P(c|D) \\
+= \operatorname*{arg\,max}_{c \in C} P(a_1,\cdots,a_n|c) P(c)
 \end{multline}
 
-Assim, segue que:
+O termo $P(c)$ também é chamado de priori e representa o conhecimento que se tem antecipadamente sobre a distribuição da classe. Geralmente, essa priori é obtida a partir de algum conhecimento sobre o domínio do problema ou supondo-se equiprobabilidade. No caso da equiprobabilidade, torna-se apenas necessário maximizar o primeiro fator.
 
-\small
-\begin{multline}
-P(a_1|a_2,a_3,\cdots,a_n,c_j) P(a_2|a_3,\cdots,a_n,c_j) \cdots P(a_n|c_j) \\
-= P(a_1|c_j) P(a_2|c_j) \cdots P(a_n|c_j) = \prod_{i=1}^n P(a_i,c_j)
-\end{multline}
-\normalsize
+A suposição de independência condicional feita pelo {\it Naive Bayes} torna mais simples a determinação do termo $P(a_1,\cdots,a_n|c)$. A partir dessa independência, é possível determinar a probabilidade de cada atributo separadamente e, em seguida, multiplicá-los para obter o valor do termo em questão.
 
-Dessa forma, o classificador {\it Naive Bayes}, $c_{j_{NB}}$ é dado por:
+Dessa forma, o classificador {\it Naive Bayes} se torna:
 
 \begin{equation}
-c_{j_{NB}} = \operatorname*{arg\,max}_{c_j \in C} \prod_{i=1}^n P(a_i|c_j) \, P(c_j)
+c_{NB} = \operatorname*{arg\,max}_{c_j \in C} \prod_{i=1}^n P(a_i|c_j) \, P(c_j)
 \end{equation}
 
 \begin{equation}
 P(a_i|c_j) = \frac{\mathrm{frequencia}(a_i,c_j)}{\mathrm{frequencia}(c_j)}
 \end{equation}
 
-Apesar da pressuposição de independência do {\it Naive Bayes}
-(que pode ser considerada um viés indutivo do algoritmo) aparentar ser bastante restritiva,
-o algoritmo ainda apresenta bom desempenho em diversas classes de problemas.
-A independência condicional dada a classe permite a determinação mais rápida da posteriori.
+Observa-se que as frequências são obtidas a partir do conjunto de dados. Apesar da pressuposição de independência do {\it Naive Bayes} (que pode ser considerada um viés indutivo do algoritmo) aparentar ser bastante restritiva, o algoritmo ainda apresenta bom desempenho em diversas classes de problemas.
 
-Pela expressão do classificador Naive Bayes, observa-se que,
-se um atributo não foi observado para alguma classe, sua probabilidade será igual a zero.
-Isso torna a resposta do algoritmo bastante dependente dos dados,
-já que, caso um atributo não seja observado no conjunto, desconsidera-se todos os outros.
+Pela expressão do classificador Naive Bayes, observa-se que, se um atributo não for observado para alguma classe, sua probabilidade será igual a zero. Isso torna a resposta do algoritmo bastante dependente dos dados, já que, caso um atributo não seja observado no conjunto, desconsidera-se todos os outros.
 
-Para se evitar isso, é comum que se utilize algum tipo de suavização, por exemplo,
-adicionando-se uma observação em cada atributo de cada classe,
-o que equivale a somar $\frac{1}{|C|}$ no numerador e 1 no denominador na determinação das probabilidades condicionais.
+Para se evitar isso, é comum que se utilize algum tipo de suavização, por exemplo, adicionando-se uma observação em cada atributo de cada classe, o que equivale a somar $\frac{1}{|C|}$ no numerador e 1 no denominador na determinação das probabilidades condicionais.
 
 \subsubsection{Regressão}
 
@@ -333,4 +281,3 @@ F = \sum_{j=1}^{K} \sum_{i=1}^{n} {|{x}_{i}^{j} - c_{j}|}^2
 \bibliography{main}
 
 \end{document}
-
