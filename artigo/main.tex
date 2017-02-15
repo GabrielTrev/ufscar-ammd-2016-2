@@ -139,11 +139,12 @@ Para que a árvore seja criada, uma métrica é associada a cada atributo da bas
 métrica essa sendo o viés indutivo do algoritmo.
 No caso do ID3, a métrica utilizada é o ganho de informação, definida em função da entropia do conjunto.
 A entropia é uma medida de dissimilaridade entre o conjunto real e sua ordenação perfeita,
-e pode ser calculada como $H(S) = -(p^+ \log_2(p^+)) - (p^- \log_2(p^-))$ no caso de classificação binária,
-onde $p^+$ é a proporção de elementos da classe positiva e $p^-$ a proporção de exemplos da classe negativa.
+e pode ser calculada como $H(S) = -(p_+ \log_2(p_+)) - (p_- \log_2(p_-))$ no caso de classificação binária,
+onde $p_+$ é a proporção de elementos da classe positiva e $p_-$ a proporção de exemplos da classe negativa.
 Devido a algumas deficiências da entropia, como atributos com muitos valores possíveis,
 geralmente a métrica é um pouco mais modificado, utilizando valores como o ganho de informação,
 razão do ganho de informação, ou a métrica Gini.
+\cite{classification-and-regression-trees}.
 
 Alguns dos algoritmos também possuem um mecanismo de poda, que busca eliminar ramos da árvore que fornecem menos informações para a classificação das instâncias.
 Há diversas maneiras de realizar a poda em árvores de decisão,
