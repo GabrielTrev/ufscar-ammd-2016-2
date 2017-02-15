@@ -77,30 +77,45 @@ onde o aprendiz se prende demais aos exemplos existentes e é incapaz de general
 Outra característica é o viés indutivo, que é a estratégia utilizada para selecionar a
 hipótese mais provável dentro do espaço de hipóteses possíveis para o algoritmo.
 
-\section{Fundamentos teóricos}
+\section{Fundamentação teórica}
 
-Nessa seção, serão discutidos alguns aspectos teóricos dos algoritmos que serão examinados nesse trabalho.
-Os algoritmos utilizados podem ser divididos em duas categorias: a de aprendizado supervisionado e de aprendizado não supervisionado.
-Dentre os algoritmos utilizados, árvore de decisão, {\it Naive Bayes} e regressão são algoritmos de aprendizado supervisionado e os algoritmos de agrupamento (k-Means e {\it Expectation Maximization}) são de aprendizado não supervisionado.
-
-Alguns dos aspectos que serão analisados nesse trabalho para cada algoritmo são séries temporais, o viés indutivo do algoritmo e sua sensibilidade a hiperparâmetros.
+Nessa seção, serão discutidos alguns aspectos teóricos dos algoritmos que serão examinados nesse trabalho,
+e uma visão geral de alguns conceitos fundamentais para essa discussão.
+Além de uma visão geral da ideia por trás de cada algoritmo,
+entraremos em detalhes sobre o comportamento de cada algoritmo em séries temporais (para os algoritmos supervisionados),
+o viés indutivo de cada um, e sua sensibilidade a hiperparâmetros.
 
 O processo de aprendizado de máquina geralmente envolve a extração de informações mais gerais acerca de um evento com base em um conjunto de instâncias conhecidas desse evento.
 Em lógica, o processo de se obter conhecimentos gerais a partir de exemplos específicos é denominado indução.
 Como, em geral, um conjunto de instâncias não é suficiente para generalizar todos os casos possíveis,
 deve-se haver um conjunto de pressuposições acerca do problema que permitam a generalização.
-Em aprendizado de máquina, esse conjunto de pressuposições é chamado de viés indutivo do algoritmo.
+Categorizamos essas pressuposições em duas formas, o viés de linguagem e o viés indutivo.
 
-Há vários tipos de viés indutivo para os algoritmos de aprendizado de máquina.
-Exemplos são o viés de busca, ou de preferência e o viés de linguagem, ou restrição.
-O viés indutivo de cada algoritmo apresentado será discutido nessa seção.
+O viés de linguagem trata da representação do problema e sua solução;
+por exemplo, os algoritmos de árvore de decisão representam a solução através de uma árvore,
+e o {\it Naïve-Bayes} representa a solução através de uma equação da máxima {\it a posteriori}.
+Muitas vezes, a representação do problema é incapaz de representar todas as possíveis hipóteses da solução,
+como as árvores de decisão são incapazes de representar hipóteses que usam combinações lineares dos atributos,
+enquanto uma regressão linear é capaz de representar essa combinação.
+
+Já o viés indutivo é mais relacionado à computabilidade e utilidade,
+e são as formas heurísticas do algoritmo escolher uma determinada hipótese sobre outra,
+ambas representáveis em sua linguagem.
+Por exemplo, para uma árvore de decisão sobre três atributos binários, de profundidade exatamente três,
+existem $2^3 = 8$ possíveis árvores, mas geralmente só uma é considerada.
+Uma das formas que os algoritmos de árvore de decisão usam para escolher essa árvore ``melhor''
+é através da entropia, como veremos adiante.
+Um algoritmo sem viés indutivo produziria como resultado um número exponencial ou até infinito
+de possíveis hipóteses, trazendo pouca informação real sobre o problema,
+e muitas vezes impossibilitando o cálculo dos resultados.
 
 Na terminologia de aprendizado de máquina, hiperparâmetros são características do algoritmo de aprendizado de máquina,
 não inferidos do conjunto de dados de treinamento, que influenciam diretamente no desempenho do algoritmo de aprendizado de máquina.
 Quanto mais sensível a hiperparâmetros for um algoritmo, mais seu desempenho será afetado pelos valores desses hiperparâmetros.
-
+Hiperparâmetros podem ser opcionais ou obrigatórios, sendo que os opcionais simplesmente possuem uma forma heurística
+de decisão sobre seu valor.
 É comum que se faça uma otimização desses hiperparâmetros para cada problema que se deseja resolver,
-já que a configuração ótima geralmente se altera de um problema para o outro.
+já que a configuração ótima se altera de um problema para o outro.
 
 \subsection{Algoritmos supervisionados}
 
