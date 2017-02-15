@@ -12,6 +12,7 @@
 
 \usepackage{times}
 \usepackage[alf]{abntex2cite}
+\usepackage{indentfirst}
 
 \title{Trabalho Final - Aprendizado de Máquina e Mineração de Dados}
 \author{
@@ -47,42 +48,34 @@ mas pouco sensíveis aos chutes iniciais de centroides ou médias das distribui�
 
 \section{Introdução}
 
-Nessa seção, será feita uma breve descrição da disciplina de Aprendizado de Máquina,
-apresentando-se uma definição do problema estudado por ela.
-A partir dessa definição, será mostrado como diferentes tipos de problema levam ao uso de diferentes abordagens.
+O aprendizado de máquina tem sido bastante discutido em tempos recentes.
+Uma definição comum de aprendizado de máquina é a de que uma máquina aprende uma determinada tarefa $T$,
+utilizando alguma métrica de performance $P$, se o sistema melhora sua performance $P$ na tarefa $T$ conforme
+uma determina experiência $E$ adquirida. \cite{mitchell06}.
+Em um contexto mais prático, dizemos que dada uma função desconhecida em um domínio qualquer, $f : A \to B$,
+queremos uma aproximação da função $f$ a partir de exemplos de mapeamentos entre $A$ e $B$,
+esses exemplos sendo os dados do nosso aprendizado.
+No mundo real, utilizamos o aprendizado de máquina em tarefas como classificação de texto,
+detecção de objetos em imagens, sistemas de recomendação automática,
+detecção de fraudes em cartão de créditos, mecanismos de pesquisa, entre outros.
 
-\subsection{Definição do Aprendizado de Máquina}
+Podemos classificar as tarefas de aprendizado de máquina em três grupos,
+o aprendizado supervisionado, não-supervisionado, e semissupervisionado.
+No aprendizado supervisionado, a variável de interesse (o contra-domínio da função $f$ descrita anteriormente)
+é conhecida, chamada de classe. Por exemplo, a classe pode ser um valor binário ``spam/não-spam''
+para um conjunto de e-mails. Para que o aprendizado seja supervisionado, todos os exemplos utilizados
+no treinamento do algoritmo deve estar marcados com a classe.
+Caso somente uma parte dos exemplos esteja marcado com a classe, chamamos o aprendizado de semissupervisionado.
+Por fim, no aprendizado não-supervisionado, a classe é uma variável latente, ou seja, não conhecida.
 
-Na literatura, é possível encontrar diferentes definições para a disciplina de Aprendizado de Máquina.
-Uma definição bastante comum para a tarefa de Aprendizado de máquina pode ser encontrada em Mitchell[2006]:
-\begin{quote}
-[...] [A] machine learns with respect to a particular task T, performance metric P, and type of experience E, if the system reliably improves its performance P at task T, following experience E. \cite{mitchell06}
-\end{quote}
-
-
-\subsection{Abordagens do Aprendizado de Máquina}
-
-Há diversas categorias de problemas que podem ser abordados por aprendizado de máquina.
-Exemplos incluem classificação de texto, detecção de objetos em imagens,
-sistemas de recomendação automática, detecção automática de fraudes em cartão de crédito,
-mecanismos de pesquisa, entre outros.
-Cada um desses problemas é possui características particulares,
-que devem ser consideradas em sua abordagem.
-
-A variedade da natureza dos problemas também leva ao surgimento de diferentes métricas de desempenho, adequadas a cada tipo de problema.
-
-Por exemplo, um aspecto muito importante a ser considerado em algoritmo de aprendizado de máquina é o {\it overfitting},
-isto é, a dependência muito forte aos dados para a geração dos modelos ou das hipóteses.
-Isso faz com que, muitas vezes, o algoritmo não tenha uma boa generalização para dados além dos dados de treinamento.
-Busca-se evitar esse aspecto quando a tarefa de aprendizado é preditiva,
-pois o algoritmo não generalizaria bem para os dados que se deseja prever,
-porém, para tarefas descritivas, esse aspecto não é negativo,
-pois deseja-se de fato que o algoritmo gere o modelo mais adequado para os dados de treinamento.
-
-Além das diferentes medidas de desempenho, deve-se também levar em consideração os dados de treinamento e de teste do algoritmo,
-já que eles serão usados para gerar as saídas desejadas.
-
-Dessa forma, o conhecimento das características das tarefas a serem realizadas e dos diferentes algoritmos de aprendizado de máquina é de grande importância para determinar qual algoritmo terá melhores resultados na tarefa a ser realizada.
+Quando comparamos os diferentes algoritmos existentes para uma determinada tarefa,
+devemos levar em consideração vários fatores sobre o próprio problema e sobre os dados existentes,
+para que possamos tomar uma decisão sobre quão apropriado é o algoritmo a esta tarefa.
+Dentre as características que devem ser estudadas,
+podemos citar o {\it overfitting}, ou super-adequação aos dados,
+onde o aprendiz se prende demais aos exemplos existentes e é incapaz de generalizar o conhecimento adquirido.
+Outra característica é o viés indutivo, que é a estratégia utilizada para selecionar a
+hipótese mais provável dentro do espaço de hipóteses possíveis para o algoritmo.
 
 \section{Fundamentos teóricos}
 
