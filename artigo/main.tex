@@ -241,13 +241,41 @@ existe somente uma hipótese que maximiza a {\it a posteriori}.
 E esse é exatamente o viés indutivo do método,
 a ``busca'' é sempre guiada para a resposta ``MAP''.
 
-\subsubsection{Regressão}
+\subsection{Regressão}
 
-Regressão é uma técnica da Estatística cujo objetivo consiste em inferir a relação entre uma variável dependente com outras variáveis independentes.Em outras palavras, um conjunto de variáveis explicam outra variável, permitindo a descrição de um conjunto de dados.
+Regressão é um método estatístico cujo objetivo consiste em inferir a relação entre uma variável dependente com outras variáveis independentes.
+Em outras palavras, um conjunto de variáveis explicam outra variável, permitindo a descrição de um conjunto de dados.
+Na área de aprendizado de máquina, também é chamado de regressão o problema canônico
+que visa predizer o valor de uma variável contínua utilizando o aprendizado supervisionado.
 
-Em Aprendizado de Máquina, Regressão consiste em um problema canônico, ajudando a predizer um valor real de uma dada instância a partir de um conjunto de instâncias de treinamento. As tarefas de Regressão integram o chamado Aprendizado Supervisionado, sendo as técnicas divididas em dois grandes grupos: regressão linear e regressão não-linear. A regressão linear tem uma função linear de relação entre a variável resposta e as variáveis explicatórias, enquanto que a regressão não-linear tem uma função não-linear.
+Existem várias formas de se aplicar uma regressão,
+duas das mais utilizadas sendo a regressão linear e a regressão logística.
+Esses nomes se referem ao modelo utilizados para descrever a predição,
+com a regressão linear tentando descrever os dados através de uma reta,
+e a regressão logística utilizando a função logística ou sigmoide.
+Isso não implica no método ou algoritmo de resolução;
+por exemplo, a regressão linear pode ser feita
+através do famoso método dos mínimos quadrados,
+ou através de um algoritmo de gradiente descendente.
 
-Uma possível área de aplicação de Regressão e de Aprendizado de Máquina ocorre em aplicações envolvendo séries temporais.Uma série temporal pode ser entendida basicamente como uma coleção de observações feitas sequencialmente ao longo de um intervalo de tempo. Assim, entender a relação entre observações vizinhas no tempo é um problema crucial.Aplicações destes conceitos vão desde áreas de finanças, economia, medicina, física, entre outras.
+Regressões são amplamente utilizadas na prática,
+devido a sua simplicidade e interpretabilidade,
+unida com uma rápida execução, resultados satisfatórios (apesar de nem sempre os melhores),
+e de utilizarem o robusto arcabouço estatístico existente,
+onde é possível calcular taxas de erro e outras métricas que outros algoritmos podem não ter.
+
+O viés indutivo da regressão depende do método de resolução utilizado.
+Por exemplo, o método dos mínimos quadrados busca o mínimo global
+do quadrado do resíduo da predição, resíduo esse representado na expressão \ref{eq:mmq},
+onde $\hat{y}$ é o valor predito e $y$ o valor real.
+A busca por gradiente descendente, por outro lado,
+também busca minimizar o quadrado do resíduo da predição da mesma expressão \ref{eq:mmq},
+mas faz uma busca local guiada pela derivada da função estimada.
+
+\begin{equation}
+\operatorname*{arg\,min}_{\hat{y}} (\hat{y} - y)^2
+\label{eq:mmq}
+\end{equation}
 
 \subsection{Algoritmos não-Supervisionados}
 
