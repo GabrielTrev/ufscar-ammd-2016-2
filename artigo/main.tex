@@ -118,7 +118,7 @@ de decisão sobre seu valor.
 já que a configuração ótima se altera de um problema para o outro.
 
 
-\subsubsection{Árvore de Decisão}
+\subsection{Árvore de Decisão}
 
 O algoritmo de árvore de decisão é um algoritmo simbólico de classificação,
 muito utilizado pela sua alta interpretabilidade e fácil computação.
@@ -172,46 +172,74 @@ Um critério bastante utilizado e limitar a profundidade máxima da árvore,
 forçando a geração de modelos mais simples e fáceis de serem interpretados.
 
 
-\subsubsection{{\b \it Naive Bayes}}
+\subsection{{Naïve-Bayes}}
 
-O algoritmo de {\it Naive Bayes} é um algoritmo probabilístico de classificação. Ele utiliza o teorema de Bayes e a pressuposição de independência condicional dos atributos dada a classe para estimar a probabilidade de cada classe a partir do conjunto de treinamento, dos atributos do dado observado e de algum conhecimento a priori sobre a distribuição da classe.
+O algoritmo {\it Naïve-Bayes} é um algoritmo probabilístico de classificação.
+Ele utiliza o teorema de Bayes e a pressuposição de independência condicional
+dos atributos dada a classe para estimar a probabilidade de cada classe a partir do conjunto de treinamento,
+dos atributos do dado observado e de algum conhecimento a priori sobre a distribuição da classe.
+É necessário que seja assumida essa independência condicional dos atributos para
+que o processo seja computacionalmente executável.
 
-O {\it Naive Bayes} é geralmente é considerado um algoritmo {\it lazy} por não ser necessária a construção de um modelo, ainda que um modelo probabilístico seja gerado. Em contrapartida, o algoritmo de árvore de decisão mencionado acima é considerado um algoritmo {\it eager}, pois gera um modelo, sendo a árvore o modelo gerado.
+O {\it Naïve-Bayes} é geralmente é considerado um algoritmo {\it lazy} por não ser necessária a construção de um modelo,
+ainda que um modelo probabilístico seja gerado.
+Em contrapartida, o algoritmo de árvore de decisão mencionado acima é considerado um algoritmo {\it eager},
+pois gera um modelo, sendo a árvore o modelo gerado.
+Dessa forma, o algoritmo de {\it Naïve-Bayes} deve ser generalizado toda vez que um dado de entrada é recebido.
+Isso faz com que o tempo de treinamento seja reduzido, porém gasta-se mais tempo na classificação.
+Algumas implementações do {\it Naïve-Bayes} são capazes de transformar o modelo em {\it eager}
+caso seja necessário.
 
-Dessa forma, o algoritmo de {\it Naive Bayes} deve ser generalizado toda vez que um dado de entrada é recebido. Isso faz com que o tempo de treinamento seja reduzido, porém gasta-se mais tempo na classificação. A pressuposição de independência condicional entre os atributos dada a classe torna o processo de classificação mais rápido.
-
-O classificador {\it Naive Bayes} funciona da seguinte forma: tendo-se o conjunto de dados de treinamento e dada uma instância não classificada, o classificador irá atribuir a essa instância a classe que obtiver a maior probabilidade, dados os atributos da instância, a partir do conjunto de dados de treinamento. Essa probabilidade é denominada posteriori. Dados os atributos $D$ e uma hipótese $h$, a posteriori é dada por:
+O classificador {\it Naïve-Bayes} funciona da seguinte forma:
+tendo-se o conjunto de dados de treinamento e dada uma instância não classificada,
+o classificador irá atribuir a essa instância a classe que obtiver a maior probabilidade,
+dados os atributos da instância, a partir do conjunto de dados de treinamento.
+Essa probabilidade é denominada {\it a posteriori}.
+Para tanto, é utilizado o teorema de Bayes (equação \ref{eq:bayes}).
 
 \begin{equation}
 P(h|D) = \frac{P(D|h) P(h)}{P(D)}
+\label{eq:bayes}
 \end{equation}
 
-Chama-se de hipótese de máximo a posteriori a hipótese que maximiza a expressão dada acima. Considerando-se a hipótese como sendo a classe $c \in C$, os atributos como sendo o vetor $D = (a_1,a_2,\cdots,a_n)$ e o conjunto $C$ como sendo o conjunto de classes, então a classe que maximiza a posteriori será dada por:
-
-\begin{multline}
-c_{MAP} = \operatorname*{arg\,max}_{c \in C} P(c|D) \\
-= \operatorname*{arg\,max}_{c \in C} P(a_1,\cdots,a_n|c) P(c)
-\end{multline}
-
-O termo $P(c)$ também é chamado de priori e representa o conhecimento que se tem antecipadamente sobre a distribuição da classe. Geralmente, essa priori é obtida a partir de algum conhecimento sobre o domínio do problema ou supondo-se equiprobabilidade. No caso da equiprobabilidade, torna-se apenas necessário maximizar o primeiro fator.
-
-A suposição de independência condicional feita pelo {\it Naive Bayes} torna mais simples a determinação do termo $P(a_1,\cdots,a_n|c)$. A partir dessa independência, é possível determinar a probabilidade de cada atributo separadamente e, em seguida, multiplicá-los para obter o valor do termo em questão.
-
-Dessa forma, o classificador {\it Naive Bayes} se torna:
+Chama-se de hipótese de máxima {\it a posteriori} $c_{MAP}$ a hipótese $h$ que maximiza o valor $P(h|D)$.
+Se considerarmos as hipóteses de que uma nova instância pertença a cada uma das possíveis classes $c$
+(do conjunto de classes possíveis $C$),
+e $D$ sendo os atributos da nossa base de dados,
+procuramos a classe $c$ que maximiza a expressão da equação \ref{eq:cmap}.
 
 \begin{equation}
-c_{NB} = \operatorname*{arg\,max}_{c_j \in C} \prod_{i=1}^n P(a_i|c_j) \, P(c_j)
+c_{MAP} = \operatorname*{arg\,max}_{c \in C} P(c|D)
+= \operatorname*{arg\,max}_{c \in C} P(D|c) P(c)
+\label{eq:cmap}
 \end{equation}
 
-\begin{equation}
-P(a_i|c_j) = \frac{\mathrm{frequencia}(a_i,c_j)}{\mathrm{frequencia}(c_j)}
-\end{equation}
+O termo $P(c)$ também é chamado de {\it a priori} e representa o conhecimento que se tem antecipadamente sobre a distribuição da classe.
+Geralmente, essa {\it a priori} é obtida a partir de algum conhecimento sobre o domínio do problema ou supondo-se equiprobabilidade.
+No caso da equiprobabilidade, torna-se necessário maximizar apenas o primeiro fator.
 
-Observa-se que as frequências são obtidas a partir do conjunto de dados. Apesar da pressuposição de independência do {\it Naive Bayes} (que pode ser considerada um viés indutivo do algoritmo) aparentar ser bastante restritiva, o algoritmo ainda apresenta bom desempenho em diversas classes de problemas.
+A suposição de independência condicional feita pelo {\it Naïve-Bayes} torna mais simples a determinação do termo $P(D|c)$.
+A partir dessa independência, é possível determinar a probabilidade de cada atributo separadamente e, em seguida, multiplicá-los para obter o valor do termo em questão.
 
-Pela expressão do classificador Naive Bayes, observa-se que, se um atributo não for observado para alguma classe, sua probabilidade será igual a zero. Isso torna a resposta do algoritmo bastante dependente dos dados, já que, caso um atributo não seja observado no conjunto, desconsidera-se todos os outros.
+Para determinar o valor de cada $P(a_i|c)$, o algoritmo utiliza uma abordagem frequentista,
+ao contar a frequência relativa de cada um dos termos.
+No caso de variáveis não-contáveis (contínuas),
+o algoritmo pode supor uma determinada distribuição dos dados,
+sendo que uma convenção muito comum é assumir a distribuição gaussiana caso não haja
+conhecimento de domínio mais adequado.
 
-Para se evitar isso, é comum que se utilize algum tipo de suavização, por exemplo, adicionando-se uma observação em cada atributo de cada classe, o que equivale a somar $\frac{1}{|C|}$ no numerador e 1 no denominador na determinação das probabilidades condicionais.
+Para evitar que algum dos valores de $P(a_i|c)$ afete demasiadamente a resposta do algoritmo
+devido a um termo ser inexistente, provocando uma multiplicação por zero,
+é comum utilizar o chamado {\it M-Estimator}.
+A função dessa suavização é adicionar um número $M$ de ocorrências a todos os possíveis termos,
+de forma que não haja uma tendência muito grande a seguir os dados,
+ou seja, para evitar o {\it overfitting}.
+O valor mais comum é $M=1$.
+
+Notamos que esse classificador possui uma resposta bastante determinística:
+existe somente uma hipótese que maximiza a {\it a posteriori}.
+E esse é exatamente o viés indutivo do método,
+a ``busca'' é sempre guiada para a resposta ``MAP''.
 
 \subsubsection{Regressão}
 
@@ -255,7 +283,7 @@ F = \sum_{j=1}^{K} \sum_{i=1}^{n} {|{x}_{i}^{j} - c_{j}|}^2
 
 \subsubsection{Árvore de Decisão}
 
-\subsubsection{{\b \it Naive Bayes}}
+\subsubsection{{\b \it Naïve-Bayes}}
 
 \subsubsection{Regressão}
 
