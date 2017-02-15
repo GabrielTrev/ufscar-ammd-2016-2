@@ -287,7 +287,8 @@ Uma possível área de aplicação de Regressão e de Aprendizado de Máquina oc
 
 Algoritmos não-supervisionados são utilizados em aplicações de aprendizado não-supervisionado, onde o conjunto de instâncias de treinamento não possui rótulos associados como em tarefas supervisionadas. Desta forma, estes algoritmos devem aprender padrões e relações entre um conjunto de instâncias não rotuladas.
 
-Como já dito anteriormente, duas tarefas canônicas em aprendizado não-supervisionado são agrupamento e regras de associação. Redes neurais também podem se enquadrar neste tipo de aprendizado. Em tarefas de agrupamento dezenas de algoritmos encontram-se disponíveis, variando desde a estratégia usada para agrupar até em relação às características do conjunto de dados. Destacam-se algoritmos baseados em densidade, como o DBSCAN, em conectividade, como o K-Means e em distribuição como o Expectation-Maximization.Para tarefas relacionadas à regras de associação, os algoritmos mais populares são o Apriori, o Eclat e o FP-growth.  
+Como já dito anteriormente, duas tarefas canônicas em aprendizado não-supervisionado são agrupamento e regras de associação. Redes neurais também podem se enquadrar neste tipo de aprendizado. Em tarefas de agrupamento dezenas de algoritmos encontram-se disponíveis, variando desde a estratégia usada para agrupar até em relação às características do conjunto de dados. Destacam-se algoritmos baseados em densidade, como o DBSCAN, em conectividade, como o K-Means e em distribuição como o Expectation-Maximization.
+Para tarefas relacionadas à regras de associação, os algoritmos mais populares são o Apriori, o Eclat e o FP-growth.  
 
 \subsubsection{{\b \it k-Means}}
 
