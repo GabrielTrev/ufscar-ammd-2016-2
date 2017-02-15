@@ -172,7 +172,7 @@ Um critério bastante utilizado e limitar a profundidade máxima da árvore,
 forçando a geração de modelos mais simples e fáceis de serem interpretados.
 
 
-\subsection{{Naïve-Bayes}}
+\subsection{Naïve-Bayes}
 
 O algoritmo {\it Naïve-Bayes} é um algoritmo probabilístico de classificação.
 Ele utiliza o teorema de Bayes e a pressuposição de independência condicional
@@ -278,14 +278,14 @@ mas faz uma busca local guiada pela derivada da função estimada.
 \end{equation}
 
 
-\subsection{{K-Means}}
+\subsection{K-Means}
 
 {\it K-Means} é um algoritmo não-supervisionado de agrupamento, com uma abordagem geométrica.
 A ideia dele é que elementos próximos, segundo uma função-distância, são parecidos e, portanto, pertencem a um mesmo grupo.
 É importante observar que a versão original do {\it K-Means} só tem garantia de convergência se a função-distância utilizada for a euclidiana.
 
 O {\it K-Means} é utilizado onde quando se conhece o número de grupos que dividem o conjunto de dados.
-Basicamente, o algoritmo consiste em definir o número $K$ de grupos a serem obtidos (parâmetro do algoritmo),
+Basicamente, o algoritmo consiste em definir o número $K$ de grupos a serem obtidos (hiperparâmetro do algoritmo),
 e um chute inicial de $K$ vetores, chamados de centroides,
 que representam o centro geométrico dos grupos.
 Cada instância de treinamento é classificada de acordo com o centroide mais próximo pela função-distância,
@@ -306,7 +306,40 @@ Portanto, o algoritmo {\it K-Means} possui um viés indutivo
 aleatório, baseado na escolha de centroides iniciais.
 
 
-\subsection{{Expectation Maximization}}
+\subsection{Expectation Maximization}
+
+O algoritmo {\it Expectation-Maximization} (EM) é um algoritmo iterativo,
+baseado em duas etapas, o ``passo-E'' e o ``passo-M''.
+O passo-E é responsável por calcular estatísticas que se adequem aos dados conhecidos,
+enquanto o passo-M é responsável por estimar estatísticas para os dados incompletos \cite{em-algorithm},
+ou seja, baseado em um chute inicial (dados conhecidos),
+o algoritmo é capaz de estimar os parâmetros que melhor adequam aos dados incompletos.
+Sendo assim, o EM é um algoritmo não-supervisionado na tarefa de agrupamento.
+
+Na sua forma prática, o EM utiliza uma mistura de distribuições.
+A quantidade de distribuições $N$ utilizadas determina o número de grupos
+a serem encontrados, similar ao valor $K$ do {\it K-Means}.
+Cada uma dessas distribuições deve ser assumido como uma
+certa distribuição probabilística, com a mais comumente utilizada sendo a distribuição gaussiana, ou normal.
+Além disso, um outro conhecimento {\it a priori} necessário
+são os parâmetros iniciais de cada distribuição, por exemplo os valores de $\mu$ e $\sigma$
+para uma distribuição gaussiana.
+Todas essas informações podem ser consideradas hiperparâmetros do algoritmo.
+
+O EM é facilmente explicado utilizando o {\it K-Means},
+que não passa de uma especialização do EM
+(com o EM sendo uma especialização do algoritmo MM).
+Quando todas as distribuições assumidas no EM é a
+proporção das distâncias euclidianas para os centroides,
+e os parâmetros iniciais são centroides escolhidos aleatoriamente,
+então o EM é exatamente o {\it K-Means}.
+Ou seja, o funcionamento do EM é \textbf{E}stimar o grupo de cada dado,
+e então \textbf{M}aximizar os parâmetros que melhor se adequam,
+se assumirmos que a estimativa está correta.
+
+Sendo assim, o viés indutivo do EM é dependente dos hiperparâmetros escolhidos,
+mas podemos dizer genericamente que a busca sempre maximiza
+a máxima {\it a posteriori} dos dados se adequarem ao chute inicial.
 
 {\it Expectation Maximization} (EM) é um algoritmo com abordagem probabilística, que pode ser usado para a tarefa de agrupamento. O algoritmo é iterativo, com cada iteração dividida em duas etapas principais, chamadas de {\it Expectation} (E) e {\it Maximization} (M), que originam o nome do algoritmo.
 
