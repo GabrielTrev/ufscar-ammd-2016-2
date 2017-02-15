@@ -28,14 +28,21 @@ UFSCar - Universidade Federal de São Carlos \\
 \maketitle
 
 \begin{abstract}
-Este texto foi desenvolvido para o trabalho final da disciplina de Aprendizado de Máquina e Mineração de Dados,
-ministrada pelo professor Dr. Estevam Rafael Hruschka Junior no segundo semestre de 2016.
-Esse trabalho tem o objetivo consolidar os conceitos vistos durante a disciplina,
-assim como verificar a aplicação dos algoritmos vistos em aula para as tarefas de aprendizado supervisionado e não supervisionado,
-levantando-se observações sobre os resultados obtidos.
-Os algoritmos contemplados por esse trabalho foram os seguintes:
-Árvore de Decisão (ID3 ou C4.5), {\it Naive Bayes}, Regressão (linear ou logística),
-{\it k-Means} e {\it Expectation Maximization}(para a tarefa de agrupamento).
+No contexto de aprendizado de máquina, dois problemas são comumente discutidos.
+O primeiro é a análise de séries temporais, ou seja, dados condicionados a uma variável tempo.
+O outro é o ajuste de hiperparâmetros dos algoritmos de aprendizado para melhor se adequarem aos dados e ao enunciado do problema estudado.
+Com o objetivo de analisar o comportamento de algoritmos clássicos em relação a estes dois conceitos,
+neste trabalho iremos estudar o comportamento dos algoritmos de árvore de decisão, {\it Naïve-Bayes},
+regressão linear e de regressão logística para a classificação de séries temporais;
+também estudaremos os algoritmos de agrupamento {\it K-Means} e {\it Expectation Maximization} (EM)
+e suas sensibilidades aos hiperparâmetros de cada um dos algoritmos.
+Para tanto, primeiro será feita uma análise teórica sobre o funcionamento de cada um desses algoritmos,
+seus usos mais comuns, e o viés indutivo relacionado a eles.
+Percebemos que os algoritmos de classificação são relativamente bem comportados a dados em séries temporais,
+mas que um modelo mais específico para isso, incluindo possivelmente conhecimento de domínio, têm uma acurácia superior.
+Ainda é possível notar que os algoritmos de agrupamento são muito sensíveis ao número de grupos que pretende se encontrar,
+principalmente quando esse valor é menor que o número real de grupos nos dados,
+mas pouco sensíveis aos chutes iniciais de centroides ou médias das distribuições.
 \end{abstract}
 
 \section{Introdução}
