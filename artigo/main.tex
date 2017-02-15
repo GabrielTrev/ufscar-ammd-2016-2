@@ -241,41 +241,92 @@ existe somente uma hipótese que maximiza a {\it a posteriori}.
 E esse é exatamente o viés indutivo do método,
 a ``busca'' é sempre guiada para a resposta ``MAP''.
 
-\subsubsection{Regressão}
+\subsection{Regressão}
 
-Regressão é uma técnica da Estatística cujo objetivo consiste em inferir a relação entre uma variável dependente com outras variáveis independentes.Em outras palavras, um conjunto de variáveis explicam outra variável, permitindo a descrição de um conjunto de dados.
+Regressão é um método estatístico cujo objetivo consiste em inferir a relação entre uma variável dependente com outras variáveis independentes.
+Em outras palavras, um conjunto de variáveis explicam outra variável, permitindo a descrição de um conjunto de dados.
+Na área de aprendizado de máquina, também é chamado de regressão o problema canônico
+que visa predizer o valor de uma variável contínua utilizando o aprendizado supervisionado.
 
-Em Aprendizado de Máquina, Regressão consiste em um problema canônico, ajudando a predizer um valor real de uma dada instância a partir de um conjunto de instâncias de treinamento. As tarefas de Regressão integram o chamado Aprendizado Supervisionado, sendo as técnicas divididas em dois grandes grupos: regressão linear e regressão não-linear. A regressão linear tem uma função linear de relação entre a variável resposta e as variáveis explicatórias, enquanto que a regressão não-linear tem uma função não-linear.
+Existem várias formas de se aplicar uma regressão,
+duas das mais utilizadas sendo a regressão linear e a regressão logística.
+Esses nomes se referem ao modelo utilizados para descrever a predição,
+com a regressão linear tentando descrever os dados através de uma reta,
+e a regressão logística utilizando a função logística ou sigmoide.
+Isso não implica no método ou algoritmo de resolução;
+por exemplo, a regressão linear pode ser feita
+através do famoso método dos mínimos quadrados,
+ou através de um algoritmo de gradiente descendente.
 
-Uma possível área de aplicação de Regressão e de Aprendizado de Máquina ocorre em aplicações envolvendo séries temporais.Uma série temporal pode ser entendida basicamente como uma coleção de observações feitas sequencialmente ao longo de um intervalo de tempo. Assim, entender a relação entre observações vizinhas no tempo é um problema crucial.Aplicações destes conceitos vão desde áreas de finanças, economia, medicina, física, entre outras.
+Regressões são amplamente utilizadas na prática,
+devido a sua simplicidade e interpretabilidade,
+unida com uma rápida execução, resultados satisfatórios (apesar de nem sempre os melhores),
+e de utilizarem o robusto arcabouço estatístico existente,
+onde é possível calcular taxas de erro e outras métricas que outros algoritmos podem não ter.
 
-\subsection{Algoritmos não-Supervisionados}
-
-Algoritmos não-supervisionados são utilizados em aplicações de aprendizado não-supervisionado, onde o conjunto de instâncias de treinamento não possui rótulos associados como em tarefas supervisionadas. Desta forma, estes algoritmos devem aprender padrões e relações entre um conjunto de instâncias não rotuladas.
-
-Como já dito anteriormente, duas tarefas canônicas em aprendizado não-supervisionado são agrupamento e regras de associação. Redes neurais também podem se enquadrar neste tipo de aprendizado. Em tarefas de agrupamento dezenas de algoritmos encontram-se disponíveis, variando desde a estratégia usada para agrupar até em relação às características do conjunto de dados. Destacam-se algoritmos baseados em densidade, como o DBSCAN, em conectividade, como o K-Means e em distribuição como o Expectation-Maximization.Para tarefas relacionadas à regras de associação, os algoritmos mais populares são o Apriori, o Eclat e o FP-growth.  
-
-\subsubsection{{\b \it K-Means}}
-K-Means é um algoritmo de clustering com uma abordagem geométrica.
-A ideia dele é que elementos próximos, segundo uma função distância, são parecidos e, portanto, pertencem a um mesmo cluster.
-É importante observar que a versão original do K-Means só tem garantia de convergencia se a função distância utilizada for a euclidiana.
-
-
-
-O K-Means é um algoritmo iterativo de aprendizado não supervisionado usado em tarefas de agrupamento para situações onde se conhece o número de "clusters" a se dividir o conjunto de dados. Basicamente,sua ideia consiste em definir o número k de grupos a serem obtidos e três vetores, chamados de "centroides", que representem o centro desses grupos de forma a servirem como referência na construção dos "clusters" pelo algoritmo. Definidos os "centroides", deve-se para cada instância de treinamento (com componentes reais) calcular a distância, por exemplo a distância Euclidiana, em relação aos k "centroides" previamente definidos, ficando a instância pertencente o grupo do "centroide" mais próximo. Deve-se repetir este passo, recalculando os centroides com as novas instâncias, até que se encontre convergência no agrupamento, ou seja, que não ocorra mais mudanças de "clusters" entre as instâncias. Esta convergência não necessariamente será encontrada de forma viável, podendo heurísticas ou aproximações serem utilizadas. Os passos básicos deste algoritmo estão abaixo.
-
-	Passo 1) Definir os K centroides iniciais.
-	Passo 2) Para cada instância, inseri-lá no grupo de centroide mais próximo.
-	Passo 3) Recalcular os K centroides com as novas instâncias integrantes do "cluster"
-	Passo 4) Repetir passos 2 e 3 até que não ocorra mais modificação de "clusters".
-
-O K-Means pode ser resumido como uma busca pela minimização de uma função objetivo, por exemplo em relação ao erro quadrático entre uma instância de treinamento X e os "centroides" dos grupos, de forma que para cada um dos K grupos e para cada uma das n instâncias de treinamento, obtém-se o menor erro quadrático em relação à distância de uma dada instância a um dado centroide, de forma que cada instância integre o "cluster" de centro mais próximo. Um exemplo de função F a ser minimizada seria:
+O viés indutivo da regressão depende do método de resolução utilizado.
+Por exemplo, o método dos mínimos quadrados busca o mínimo global
+do quadrado do resíduo da predição, resíduo esse representado na expressão \ref{eq:mmq},
+onde $\hat{y}$ é o valor predito e $y$ o valor real.
+A busca por gradiente descendente, por outro lado,
+também busca minimizar o quadrado do resíduo da predição da mesma expressão \ref{eq:mmq},
+mas faz uma busca local guiada pela derivada da função estimada.
 
 \begin{equation}
-F = \sum_{j=1}^{K} \sum_{i=1}^{n} {|{x}_{i}^{j} - c_{j}|}^2
+\operatorname*{arg\,min}_{\hat{y}} (\hat{y} - y)^2
+\label{eq:mmq}
 \end{equation}
 
-\subsubsection{{\b \it Expectation Maximization}}
+
+\subsection{{K-Means}}
+
+{\it K-Means} é um algoritmo não-supervisionado de agrupamento, com uma abordagem geométrica.
+A ideia dele é que elementos próximos, segundo uma função-distância, são parecidos e, portanto, pertencem a um mesmo grupo.
+É importante observar que a versão original do {\it K-Means} só tem garantia de convergência se a função-distância utilizada for a euclidiana.
+
+O {\it K-Means} é utilizado onde quando se conhece o número de grupos que dividem o conjunto de dados.
+Basicamente, o algoritmo consiste em definir o número $K$ de grupos a serem obtidos (parâmetro do algoritmo),
+e um chute inicial de $K$ vetores, chamados de centroides,
+que representam o centro geométrico dos grupos.
+Cada instância de treinamento é classificada de acordo com o centroide mais próximo pela função-distância,
+e então o centroide é reajustado para o novo centro das instâncias que classificou.
+Esse processo é repetido iterativamente até que nenhuma instância mude sua classificação durante uma iteração.
+Os pontos ``pertencentes'' a cada centroide é então considerado um grupo,
+e os centroides são descartados.
+
+Sendo uma abordagem puramente geométrica,
+e tradicionalmente pautada na distância euclidiana,
+o algoritmo tem um viés indutivo simples,
+de encontrar os centroides que minimizem a distância entre cada instância e o centroide mais próximo.
+No entanto, uma característica mais interessante é a escolha dos centroides iniciais.
+Os centroides iniciais são escolhidos aleatoriamente,
+e diversos trabalhos propõe escolhas melhores para esses pontos,
+como o algoritmo {\it K-Means++}, com ganhos significativos de performance.
+Portanto, o algoritmo {\it K-Means} possui um viés indutivo
+aleatório, baseado na escolha de centroides iniciais.
+
+\subsection{{Expectation Maximization}}
+
+{\it Expectation Maximization} (EM) é um algoritmo com abordagem probabilística, que pode ser usado para a tarefa de agrupamento. O algoritmo é iterativo, com cada iteração dividida em duas etapas principais, chamadas de {\it Expectation} (E) e {\it Maximization} (M), que originam o nome do algoritmo.
+
+O EM busca maximizar o valor esperado da probabilidade de um conjunto de parâmetros, em relação a um conjunto de variáveis observadas e um conjunto de variáveis não observadas \cite{Singh}. O algoritmo possui garantia de convergência \cite{DLR1977}, porém, assim como ocorre com o k-Means, ele pode convergir em ótimos locais.
+
+Dados um conjunto de dados observados $X$, um conjunto de dados não observado $Z$ e um conjunto de parâmetros $\theta$ que se deseja estimar, os seguintes passos são repetidos até a convergência do algoritmo:
+
+\begin{description}
+\item[Passo E] Determinar $P(X|\theta) = \sum_Z P(X,Z|\theta)$
+\item[Passo M] Maximizar a expressão com relação a $\theta$
+\end{description}
+
+Para simplificar a computação, é comum, no passo E, calcular o logaritmo da probabilidade, já que os produtos da probabilidades se tornam somas com o logaritmo. Outra simplificação muitas vezes feita é estimar um limitante inferior para a probabilidade, de forma que, maximizando-se o limitante inferior, maximiza-se também a probabilidade, com redução no custo computacional \cite{Dellaert}.
+
+Um viés indutivo do algoritmo é que os parâmetros são determinados a partir dos que obtiverem máxima verossimilhança (probabilidade dos dados condicionados pelos parâmetros).
+
+Dado um modelo probabilístico relacionando os parâmetros e os dados de treinamento, o EM tentará otimizar esses parâmetros. Os tipos de parâmetros a serem otimizados e as distribuições de probabilidade dos parâmetros são provenientes do modelo de dados informado ao algoritmo. Dessa forma, esse modelo de dados é um hiperparâmetro de grande importância para o EM.
+
+O EM pode ser utilizado para problemas de agrupamento, fazendo-se com que os parâmetros sejam os grupos possíveis. Há mais de uma forma de se construir um modelo de probabilidade para os grupos. Uma delas, utilizada para dados categóricos, consiste em informar uma hipótese inicial dos grupos de cada instância e, a partir desses grupos iniciais, começar as iterações. Outra forma, utilizada para atributos numéricos, é assumir a probabilidade de cada grupo como sendo uma gaussiana no espaço de atributos, com média e desvio padrão iniciais determinados manualmente ou aleatoriamente.
+
+O algoritmo EM pode realizar o agrupamento de duas formas, uma delas é conhecida como {\it Hard EM} e a outra é conhecida como {\it Soft EM} \cite{mcallester}. Na abordagem {\it Hard EM}, cada instância pode pertencer a apenas um grupo, enquanto na abordagem {\it Soft EM}, uma instância pode pertencer a mais de um grupo.
 
 \section{Experimentos e Resultados}
 
