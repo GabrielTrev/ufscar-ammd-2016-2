@@ -12,6 +12,7 @@
 
 \usepackage{times}
 \usepackage[alf]{abntex2cite}
+\usepackage{indentfirst}
 
 \title{Trabalho Final - Aprendizado de Máquina e Mineração de Dados}
 \author{
@@ -28,138 +29,124 @@ UFSCar - Universidade Federal de São Carlos \\
 \maketitle
 
 \begin{abstract}
-Este texto foi desenvolvido para o trabalho final da disciplina de Aprendizado de Máquina e Mineração de Dados,
-ministrada pelo professor Dr. Estevam Rafael Hruschka Junior no segundo semestre de 2016.
-Esse trabalho tem o objetivo consolidar os conceitos vistos durante a disciplina,
-assim como verificar a aplicação dos algoritmos vistos em aula para as tarefas de aprendizado supervisionado e não supervisionado,
-levantando-se observações sobre os resultados obtidos.
-Os algoritmos contemplados por esse trabalho foram os seguintes:
-Árvore de Decisão (ID3 ou C4.5), {\it Naive Bayes}, Regressão (linear ou logística),
-{\it k-Means} e {\it Expectation Maximization}(para a tarefa de agrupamento).
+No contexto de aprendizado de máquina, dois problemas são comumente discutidos.
+O primeiro é a análise de séries temporais, ou seja, dados condicionados a uma variável tempo.
+O outro é o ajuste de hiperparâmetros dos algoritmos de aprendizado para melhor se adequarem aos dados e ao enunciado do problema estudado.
+Com o objetivo de analisar o comportamento de algoritmos clássicos em relação a estes dois conceitos,
+neste trabalho estudaremos o comportamento dos algoritmos de árvore de decisão, {\it Naïve-Bayes},
+regressão linear e de regressão logística para a classificação de séries temporais;
+também estudaremos os algoritmos de agrupamento {\it K-Means} e {\it Expectation Maximization} (EM)
+e suas sensibilidades aos hiperparâmetros de cada um dos algoritmos.
+Para tanto, primeiro será feita uma análise teórica sobre o funcionamento de cada um desses algoritmos,
+seus usos mais comuns, e o viés indutivo relacionado a eles.
+Percebemos que os algoritmos de classificação lidam bem com dados em séries temporais,
+mas que um modelo mais específico para isso, incluindo possivelmente conhecimento de domínio, têm uma acurácia superior.
+Ainda é possível notar que os algoritmos de agrupamento são muito sensíveis ao número de grupos que pretende se encontrar,
+principalmente quando esse valor é menor que o número real de grupos nos dados,
+mas pouco sensíveis aos chutes iniciais de centroides ou médias das distribuições.
 \end{abstract}
 
 \section{Introdução}
 
-Nessa seção, será feita uma breve descrição da disciplina de Aprendizado de Máquina,
-apresentando-se uma definição do problema estudado por ela.
-A partir dessa definição, será mostrado como diferentes tipos de problema levam ao uso de diferentes abordagens.
+O aprendizado de máquina tem sido bastante discutido em tempos recentes.
+Uma definição comum de aprendizado de máquina é a de que uma máquina aprende uma determinada tarefa $T$,
+utilizando alguma métrica de performance $P$, se o sistema melhora sua performance $P$ na tarefa $T$ conforme
+uma determina experiência $E$ adquirida. \cite{mitchell06}.
+Em um contexto mais prático, dizemos que dada uma função desconhecida em um domínio qualquer, $f : A \to B$,
+queremos uma aproximação da função $f$ a partir de exemplos de mapeamentos entre $A$ e $B$,
+esses exemplos sendo os dados do nosso aprendizado.
+No mundo real, utilizamos o aprendizado de máquina em tarefas como classificação de texto,
+detecção de objetos em imagens, sistemas de recomendação automática,
+detecção de fraudes em cartão de créditos, mecanismos de pesquisa, entre outros.
 
-\subsection{Definição do Aprendizado de Máquina}
+Podemos classificar as tarefas de aprendizado de máquina em três grupos,
+o aprendizado supervisionado, não-supervisionado, e semissupervisionado.
+No aprendizado supervisionado, a variável de interesse (o contra-domínio da função $f$ descrita anteriormente)
+é conhecida, chamada de classe. Por exemplo, a classe pode ser um valor binário ``spam/não-spam''
+para um conjunto de e-mails. Para que o aprendizado seja supervisionado, todos os exemplos utilizados
+no treinamento do algoritmo deve estar marcados com a classe.
+Caso somente uma parte dos exemplos esteja marcado com a classe, chamamos o aprendizado de semissupervisionado.
+Por fim, no aprendizado não-supervisionado, a classe é uma variável latente, ou seja, não conhecida.
 
-Na literatura, é possível encontrar diferentes definições para a disciplina de Aprendizado de Máquina.
-Uma definição bastante comum para a tarefa de Aprendizado de máquina pode ser encontrada em Mitchell[2006]:
-\begin{quote}
-[...] [A] machine learns with respect to a particular task T, performance metric P, and type of experience E, if the system reliably improves its performance P at task T, following experience E. \cite{mitchell06}
-\end{quote}
+Quando comparamos os diferentes algoritmos existentes para uma determinada tarefa,
+devemos levar em consideração vários fatores sobre o próprio problema e sobre os dados existentes,
+para que possamos tomar uma decisão sobre quão apropriado é o algoritmo a esta tarefa.
+Dentre as características que devem ser estudadas,
+podemos citar o {\it overfitting}, ou super-adequação aos dados,
+onde o aprendiz se prende demais aos exemplos existentes e é incapaz de generalizar o conhecimento adquirido.
+Outra característica é o viés indutivo, que é a estratégia utilizada para selecionar a
+hipótese mais provável dentro do espaço de hipóteses possíveis para o algoritmo.
 
+\section{Fundamentação teórica}
 
-\subsection{Abordagens do Aprendizado de Máquina}
-
-Há diversas categorias de problemas que podem ser abordados por aprendizado de máquina.
-Exemplos incluem classificação de texto, detecção de objetos em imagens,
-sistemas de recomendação automática, detecção automática de fraudes em cartão de crédito,
-mecanismos de pesquisa, entre outros.
-Cada um desses problemas é possui características particulares,
-que devem ser consideradas em sua abordagem.
-
-A variedade da natureza dos problemas também leva ao surgimento de diferentes métricas de desempenho, adequadas a cada tipo de problema.
-
-Por exemplo, um aspecto muito importante a ser considerado em algoritmo de aprendizado de máquina é o {\it overfitting},
-isto é, a dependência muito forte aos dados para a geração dos modelos ou das hipóteses.
-Isso faz com que, muitas vezes, o algoritmo não tenha uma boa generalização para dados além dos dados de treinamento.
-Busca-se evitar esse aspecto quando a tarefa de aprendizado é preditiva,
-pois o algoritmo não generalizaria bem para os dados que se deseja prever,
-porém, para tarefas descritivas, esse aspecto não é negativo,
-pois deseja-se de fato que o algoritmo gere o modelo mais adequado para os dados de treinamento.
-
-Além das diferentes medidas de desempenho, deve-se também levar em consideração os dados de treinamento e de teste do algoritmo,
-já que eles serão usados para gerar as saídas desejadas.
-
-Dessa forma, o conhecimento das características das tarefas a serem realizadas e dos diferentes algoritmos de aprendizado de máquina é de grande importância para determinar qual algoritmo terá melhores resultados na tarefa a ser realizada.
-
-\section{Fundamentos teóricos}
-
-Nessa seção, serão discutidos alguns aspectos teóricos dos algoritmos que serão examinados nesse trabalho.
-Os algoritmos utilizados podem ser divididos em duas categorias: a de aprendizado supervisionado e de aprendizado não supervisionado.
-Dentre os algoritmos utilizados, árvore de decisão, {\it Naive Bayes} e regressão são algoritmos de aprendizado supervisionado e os algoritmos de agrupamento (k-Means e {\it Expectation Maximization}) são de aprendizado não supervisionado.
-
-Alguns dos aspectos que serão analisados nesse trabalho para cada algoritmo são séries temporais, o viés indutivo do algoritmo e sua sensibilidade a hiperparâmetros.
+Nessa seção, serão discutidos alguns aspectos teóricos dos algoritmos que serão examinados nesse trabalho,
+e uma visão geral de alguns conceitos fundamentais para essa discussão.
+Além de uma visão geral da ideia por trás de cada algoritmo,
+entraremos em detalhes sobre o comportamento de cada algoritmo em séries temporais (para os algoritmos supervisionados),
+o viés indutivo de cada um, e sua sensibilidade a hiperparâmetros.
 
 O processo de aprendizado de máquina geralmente envolve a extração de informações mais gerais acerca de um evento com base em um conjunto de instâncias conhecidas desse evento.
 Em lógica, o processo de se obter conhecimentos gerais a partir de exemplos específicos é denominado indução.
 Como, em geral, um conjunto de instâncias não é suficiente para generalizar todos os casos possíveis,
 deve-se haver um conjunto de pressuposições acerca do problema que permitam a generalização.
-Em aprendizado de máquina, esse conjunto de pressuposições é chamado de viés indutivo do algoritmo.
+Categorizamos essas pressuposições em duas formas, o viés de linguagem e o viés indutivo.
 
-Há vários tipos de viés indutivo para os algoritmos de aprendizado de máquina.
-Exemplos são o viés de busca, ou de preferência e o viés de linguagem, ou restrição.
-O viés indutivo de cada algoritmo apresentado será discutido nessa seção.
+O viés de linguagem trata da representação do problema e sua solução;
+por exemplo, os algoritmos de árvore de decisão representam a solução através de uma árvore,
+e o {\it Naïve-Bayes} representa a solução através de uma equação da máxima {\it a posteriori}.
+Muitas vezes, a representação do problema é incapaz de representar todas as possíveis hipóteses da solução,
+como as árvores de decisão são incapazes de representar hipóteses que usam combinações lineares dos atributos,
+enquanto uma regressão linear é capaz de representar essa combinação.
+
+Já o viés indutivo é mais relacionado à computabilidade e utilidade,
+e são as formas heurísticas do algoritmo escolher uma determinada hipótese sobre outra,
+ambas representáveis em sua linguagem.
+Por exemplo, para uma árvore de decisão sobre três atributos binários, de profundidade exatamente três,
+existem $2^3 = 8$ possíveis árvores, mas geralmente só uma é considerada.
+Uma das formas que os algoritmos de árvore de decisão usam para escolher essa árvore ``melhor''
+é através da entropia, como veremos adiante.
+Um algoritmo sem viés indutivo produziria como resultado um número exponencial ou até infinito
+de possíveis hipóteses, trazendo pouca informação real sobre o problema,
+e muitas vezes impossibilitando o cálculo dos resultados.
 
 Na terminologia de aprendizado de máquina, hiperparâmetros são características do algoritmo de aprendizado de máquina,
 não inferidos do conjunto de dados de treinamento, que influenciam diretamente no desempenho do algoritmo de aprendizado de máquina.
 Quanto mais sensível a hiperparâmetros for um algoritmo, mais seu desempenho será afetado pelos valores desses hiperparâmetros.
-
+Hiperparâmetros podem ser opcionais ou obrigatórios, sendo que os opcionais simplesmente possuem uma forma heurística
+de decisão sobre seu valor.
 É comum que se faça uma otimização desses hiperparâmetros para cada problema que se deseja resolver,
-já que a configuração ótima geralmente se altera de um problema para o outro.
+já que a configuração ótima se altera de um problema para o outro.
 
-\subsection{Algoritmos supervisionados}
 
-Em algoritmos de dados supervisionado, é dado um conjunto de dados de treinamento rotulados para o algoritmo.
-As variáveis não rótulo são denominadas atributos e a variável rótulo é comumente chamada de variável alvo, ou variável resposta.
-O objetivo dos algoritmos de aprendizado supervisionado é determinar a relação existente entre os atributos e a variável alvo,
-de forma a predizer o valor da variável alvo para um dado não rotulado.
-A função que relaciona os atributos e a variável alvo é denominada função hipótese.
+\subsection{Árvore de Decisão}
 
-Os elementos do conjunto de dados de treinamento são também chamados de instâncias e são comumente representados por vetores de atributos.
-É comum denominar-se a tarefa de aprendizado supervisionado de classificação, quando a variável alvo é discreta, e de regressão, quando a variável alvo é contínua.
+O algoritmo de árvore de decisão é um algoritmo simbólico de classificação,
+muito utilizado pela sua alta interpretabilidade e fácil computação.
+Nesse algoritmo, cada valor de atributo ou da variável alvo é visto como uma expressão lógica,
+de forma que cada instância é vista como uma conjunção de expressões lógicas.
 
-\subsubsection{Árvore de Decisão}
+A saída do algoritmo é uma árvore de decisão,
+que pode ser vista como um conjunto de regras que associam um valor de saída (classe) para cada conjunção de entrada.
+Essa árvore é obtida a partir do conjunto de dados de treinamento,
+verificando-se as frequências dos valores dos atributos com relação aos valores da variável alvo.
 
-O algoritmo de árvore de decisão é um algoritmo simbólico de classificação, em que a variável alvo geralmente possui duas classes.
-Nesse algoritmo, cada valor de atributo ou da variável alvo é visto como uma expressão lógica, de forma que cada instância é vista como uma conjunção de expressões lógicas.
+Diversos algoritmos existem para a criação dessas árvores, como o ID3, C4.5 e CART.
+Embora algumas poucas características mudem entre eles, o funcionamento é bastante similar.
+Para simplificar a explicação teórica, utilizaremos o ID3,
+embora na prática utilizemos o CART, como implementado na biblioteca {\it scikit-learn}.
 
-A saída do algoritmo é uma árvore de decisão, que pode ser vista como um conjunto de regras que determinam associam um valor da saída para cada conjunção de entradas.
-Essa árvore é obtida a partir do conjunto de dados de treinamento, verificando-se as frequências dos valores dos atributos com relação aos valores da variável alvo.
+Para que a árvore seja criada, uma métrica é associada a cada atributo da base de dados,
+métrica essa sendo o viés indutivo do algoritmo.
+No caso do ID3, a métrica utilizada é o ganho de informação, definida em função da entropia do conjunto.
+A entropia é uma medida de dissimilaridade entre o conjunto real e sua ordenação perfeita,
+e pode ser calculada como $H(S) = -(p_+ \log_2(p_+)) - (p_- \log_2(p_-))$ no caso de classificação binária,
+onde $p_+$ é a proporção de elementos da classe positiva e $p_-$ a proporção de exemplos da classe negativa.
+Devido a algumas deficiências da entropia, como atributos com muitos valores possíveis,
+geralmente a métrica é um pouco mais modificado, utilizando valores como o ganho de informação,
+razão do ganho de informação, ou a métrica Gini.
+\cite{classification-and-regression-trees}.
 
-Os algoritmos de árvore de decisão vistos durante a disciplina foram o ID3 e o C4.5.
-Ambos os algoritmos utilizam métricas com base na entropia para a determinação da ordem da colocação dos atributos na árvore.
-No caso do ID3, utiliza-se o ganho de informação, enquanto no caso do C4.5, utiliza-se a razão de informação.
-
-A entropia pode ser vista como uma medida da quantidade de informação sobre a classe que pode ser obtida a partir de um conjunto de dados.
-Seja $S$ um conjunto de amostras, $p^+$ a proporção de exemplos positivos de um evento nessa amostra e $p^-$ a proporção de eventos negativos dessa amostra.
-A entropia desse conjunto é definida por:
-
-\begin{equation}
-\mathrm{Entropia}(S) = -(p^+ \log_2(p^+)) - (p^- \log_2(p^-))
-\end{equation}
-
-O valor da entropia varia entre 0 e 1 e é menor quanto menos igualmente distribuído for o conjunto de dados com relação à classe.
-O ganho de informação e a razão de informação são métricas que buscam indicar o atributo que fornece mais informação sobre a classe,
-ou seja, o atributo que, em média, quando se dividir a árvore em ramos, mais diminuirá a entropia do conjunto.
-A razão de informação leva também em conta atributos com muitos valores, dividindo-se o ganho pela informação intrínseca({\it split information}) de cada atributo.
-
-Seja $S$ um conjunto de dados, $A$ um atributo, $V(A)$ o conjunto de valores possíveis desse atributo e $S_{Av}$ o subconjunto de $S$ em que atributo $A$ possui valor $v \in V(A)$.
-Então, o ganho de informação e a razão de informação do atributo $A$, com relação ao conjunto $S$, são definidos por:
-
-\small
-\begin{equation}
-\mathrm{Ganho}(S,A)=\mathrm{Entropia}(S)-\sum_{v \in V(A)}\frac{\left|S_{Av}\right|}{\left|S\right|} \mathrm{Entropia}(S_{Av})
-\end{equation}
-
-\begin{equation}
-\mathrm{Razao}(S,A)=\frac{\mathrm{Ganho}(S,A)}{\mathrm{SplitInformation}(S,A)}
-\end{equation}
-
-\begin{equation}
-{\tiny \mathrm{SplitInformation}(S,A) = -\sum_{v\in V(A)} \frac{\left|S_{Av}\right|}{\left|S\right|} \log_2\left(\frac{\left|S_{Av}\right|}{\left|S\right|}\right)}
-\end{equation}
-\normalsize
-
-Tanto o algoritmo ID3 como o algoritmo C4.5 utilizam uma estratégia de subida de encosta para a determinação dos atributos dos nós,
-em que, uma vez determinado o atributo de um nó, o algoritmo continua para suas subárvores, sem retornar para esse nó.
-
-O algoritmo C4.5 também possui um mecanismo de poda, que busca eliminar ramos da árvore que fornecem menos informações para a classificação das instâncias.
-
+Alguns dos algoritmos também possuem um mecanismo de poda, que busca eliminar ramos da árvore que fornecem menos informações para a classificação das instâncias.
 Há diversas maneiras de realizar a poda em árvores de decisão,
 uma delas consiste em separar um conjunto de dados de teste,
 representar a árvore de decisão como um conjunto de regras do tipo se então,
@@ -167,61 +154,92 @@ em seguida, para cada antecedente de cada regra, comparar o desempenho da árvor
 retirando-se esse antecedente. Caso o desempenho da árvore melhore, esse antecedente é retirado da regra.
 Isso diminui o tamanho dos ramos da árvore de decisão, tornando-a menos suscetível ao {\it overfitting}.
 
-Tanto no algoritmo ID3 quanto no C4.5,
-verifica-se uma tendência de escolha de árvores mais curtas.
-Isso se à escolha dos atributos dos nós, que é feita com base nos nós que fornecem mais informação sobre a classe.
-Os algoritmos seguem a estratégia de subida de encosta,
-já que, após escolhido um nó, o algoritmo segue para suas subárvores, não retornando mais a esse nó.
+Em vários dos algoritmos, ainda existe uma tendência para a escolha de árvores mais curtas,
+que também faz parte do viés indutivo dos algoritmos.
+Essa escolha é baseada no princípio da navalha de Occam,
+que afirma que modelos mais simples são geralmente mais efetivos.
+Uma árvore mais curta é, de fato, menos sensível ao {\it overfitting}
+devido ao viés de linguagem, pois a representação possibilita menos hipóteses possíveis.
 
-Enquanto essa estratégia não necessariamente retorna a menor árvore possível, a árvore encontrada é geralmente uma das menores possíveis. Dessa forma, diz-se que os algoritmos ID3 e C4.5 possuem um viés de busca, ou preferência, já que dão preferência a árvores mais curtas, ou seja, hipóteses mais simples. 
+Sobre os hiperparâmetros, as árvores de decisão são geralmente chamadas de algoritmos não-paramétricos.
+No entanto, algumas das características que são assumidas por certas versões podem ser manipuladas
+a fim de alterar o funcionamento do algoritmo.
+Por exemplo, a utilização da poda, e qual forma de poda é utilizada,
+podem alterar significativamente o modelo gerado pelo algoritmo.
+Algumas implementações ainda permitem a mudança do critério de escolha de atributos,
+por exemplo alterando entre a entropia e o Gini.
+Um critério bastante utilizado e limitar a profundidade máxima da árvore,
+forçando a geração de modelos mais simples e fáceis de serem interpretados.
 
-A preferência por hipóteses mais curtas (comumente chamada na literatura de navalha de Occam) permite que o algoritmo generalize melhor para dados não vistos,
-já que hipóteses mais longas tendem a ser mais específicas para o conjunto de dados.
 
-Um hiperparâmetro de importância para a árvore de decisão é a utilização ou não da poda e qual forma de poda é utilizada;
-outro hiperparâmetro importante quando lidando com atributos contínuos ou com um domínio muito grande é a discretização feita para esses atributos,
-já que ela determina a ramificação da árvore.
+\subsection{{Naïve-Bayes}}
 
-\subsubsection{{\b \it Naive Bayes}}
+O algoritmo {\it Naïve-Bayes} é um algoritmo probabilístico de classificação.
+Ele utiliza o teorema de Bayes e a pressuposição de independência condicional
+dos atributos dada a classe para estimar a probabilidade de cada classe a partir do conjunto de treinamento,
+dos atributos do dado observado e de algum conhecimento a priori sobre a distribuição da classe.
+É necessário que seja assumida essa independência condicional dos atributos para
+que o processo seja computacionalmente executável.
 
-O algoritmo de {\it Naive Bayes} é um algoritmo probabilístico de classificação. Ele utiliza o teorema de Bayes e a pressuposição de independência condicional dos atributos dada a classe para estimar a probabilidade de cada classe a partir do conjunto de treinamento, dos atributos do dado observado e de algum conhecimento a priori sobre a distribuição da classe.
+O {\it Naïve-Bayes} é geralmente é considerado um algoritmo {\it lazy} por não ser necessária a construção de um modelo,
+ainda que um modelo probabilístico seja gerado.
+Em contrapartida, o algoritmo de árvore de decisão mencionado acima é considerado um algoritmo {\it eager},
+pois gera um modelo, sendo a árvore o modelo gerado.
+Dessa forma, o algoritmo de {\it Naïve-Bayes} deve ser generalizado toda vez que um dado de entrada é recebido.
+Isso faz com que o tempo de treinamento seja reduzido, porém gasta-se mais tempo na classificação.
+Algumas implementações do {\it Naïve-Bayes} são capazes de transformar o modelo em {\it eager}
+caso seja necessário.
 
-O {\it Naive Bayes} é geralmente é considerado um algoritmo {\it lazy} por não ser necessária a construção de um modelo, ainda que um modelo probabilístico seja gerado. Em contrapartida, o algoritmo de árvore de decisão mencionado acima é considerado um algoritmo {\it eager}, pois gera um modelo, sendo a árvore o modelo gerado.
-
-Dessa forma, o algoritmo de {\it Naive Bayes} deve ser generalizado toda vez que um dado de entrada é recebido. Isso faz com que o tempo de treinamento seja reduzido, porém gasta-se mais tempo na classificação. A pressuposição de independência condicional entre os atributos dada a classe torna o processo de classificação mais rápido.
-
-O classificador {\it Naive Bayes} funciona da seguinte forma: tendo-se o conjunto de dados de treinamento e dada uma instância não classificada, o classificador irá atribuir a essa instância a classe que obtiver a maior probabilidade, dados os atributos da instância, a partir do conjunto de dados de treinamento. Essa probabilidade é denominada posteriori. Dados os atributos $D$ e uma hipótese $h$, a posteriori é dada por:
+O classificador {\it Naïve-Bayes} funciona da seguinte forma:
+tendo-se o conjunto de dados de treinamento e dada uma instância não classificada,
+o classificador irá atribuir a essa instância a classe que obtiver a maior probabilidade,
+dados os atributos da instância, a partir do conjunto de dados de treinamento.
+Essa probabilidade é denominada {\it a posteriori}.
+Para tanto, é utilizado o teorema de Bayes (equação \ref{eq:bayes}).
 
 \begin{equation}
 P(h|D) = \frac{P(D|h) P(h)}{P(D)}
+\label{eq:bayes}
 \end{equation}
 
-Chama-se de hipótese de máximo a posteriori a hipótese que maximiza a expressão dada acima. Considerando-se a hipótese como sendo a classe $c \in C$, os atributos como sendo o vetor $D = (a_1,a_2,\cdots,a_n)$ e o conjunto $C$ como sendo o conjunto de classes, então a classe que maximiza a posteriori será dada por:
-
-\begin{multline}
-c_{MAP} = \operatorname*{arg\,max}_{c \in C} P(c|D) \\
-= \operatorname*{arg\,max}_{c \in C} P(a_1,\cdots,a_n|c) P(c)
-\end{multline}
-
-O termo $P(c)$ também é chamado de priori e representa o conhecimento que se tem antecipadamente sobre a distribuição da classe. Geralmente, essa priori é obtida a partir de algum conhecimento sobre o domínio do problema ou supondo-se equiprobabilidade. No caso da equiprobabilidade, torna-se apenas necessário maximizar o primeiro fator.
-
-A suposição de independência condicional feita pelo {\it Naive Bayes} torna mais simples a determinação do termo $P(a_1,\cdots,a_n|c)$. A partir dessa independência, é possível determinar a probabilidade de cada atributo separadamente e, em seguida, multiplicá-los para obter o valor do termo em questão.
-
-Dessa forma, o classificador {\it Naive Bayes} se torna:
+Chama-se de hipótese de máxima {\it a posteriori} $c_{MAP}$ a hipótese $h$ que maximiza o valor $P(h|D)$.
+Se considerarmos as hipóteses de que uma nova instância pertença a cada uma das possíveis classes $c$
+(do conjunto de classes possíveis $C$),
+e $D$ sendo os atributos da nossa base de dados,
+procuramos a classe $c$ que maximiza a expressão da equação \ref{eq:cmap}.
 
 \begin{equation}
-c_{NB} = \operatorname*{arg\,max}_{c_j \in C} \prod_{i=1}^n P(a_i|c_j) \, P(c_j)
+c_{MAP} = \operatorname*{arg\,max}_{c \in C} P(c|D)
+= \operatorname*{arg\,max}_{c \in C} P(D|c) P(c)
+\label{eq:cmap}
 \end{equation}
 
-\begin{equation}
-P(a_i|c_j) = \frac{\mathrm{frequencia}(a_i,c_j)}{\mathrm{frequencia}(c_j)}
-\end{equation}
+O termo $P(c)$ também é chamado de {\it a priori} e representa o conhecimento que se tem antecipadamente sobre a distribuição da classe.
+Geralmente, essa {\it a priori} é obtida a partir de algum conhecimento sobre o domínio do problema ou supondo-se equiprobabilidade.
+No caso da equiprobabilidade, torna-se necessário maximizar apenas o primeiro fator.
 
-Observa-se que as frequências são obtidas a partir do conjunto de dados. Apesar da pressuposição de independência do {\it Naive Bayes} (que pode ser considerada um viés indutivo do algoritmo) aparentar ser bastante restritiva, o algoritmo ainda apresenta bom desempenho em diversas classes de problemas.
+A suposição de independência condicional feita pelo {\it Naïve-Bayes} torna mais simples a determinação do termo $P(D|c)$.
+A partir dessa independência, é possível determinar a probabilidade de cada atributo separadamente e, em seguida, multiplicá-los para obter o valor do termo em questão.
 
-Pela expressão do classificador Naive Bayes, observa-se que, se um atributo não for observado para alguma classe, sua probabilidade será igual a zero. Isso torna a resposta do algoritmo bastante dependente dos dados, já que, caso um atributo não seja observado no conjunto, desconsidera-se todos os outros.
+Para determinar o valor de cada $P(a_i|c)$, o algoritmo utiliza uma abordagem frequentista,
+ao contar a frequência relativa de cada um dos termos.
+No caso de variáveis não-contáveis (contínuas),
+o algoritmo pode supor uma determinada distribuição dos dados,
+sendo que uma convenção muito comum é assumir a distribuição gaussiana caso não haja
+conhecimento de domínio mais adequado.
 
-Para se evitar isso, é comum que se utilize algum tipo de suavização, por exemplo, adicionando-se uma observação em cada atributo de cada classe, o que equivale a somar $\frac{1}{|C|}$ no numerador e 1 no denominador na determinação das probabilidades condicionais.
+Para evitar que algum dos valores de $P(a_i|c)$ afete demasiadamente a resposta do algoritmo
+devido a um termo ser inexistente, provocando uma multiplicação por zero,
+é comum utilizar o chamado {\it M-Estimator}.
+A função dessa suavização é adicionar um número $M$ de ocorrências a todos os possíveis termos,
+de forma que não haja uma tendência muito grande a seguir os dados,
+ou seja, para evitar o {\it overfitting}.
+O valor mais comum é $M=1$.
+
+Notamos que esse classificador possui uma resposta bastante determinística:
+existe somente uma hipótese que maximiza a {\it a posteriori}.
+E esse é exatamente o viés indutivo do método,
+a ``busca'' é sempre guiada para a resposta ``MAP''.
 
 \subsubsection{Regressão}
 
@@ -244,6 +262,19 @@ A ideia dele é que elementos próximos, segundo uma função distância, são p
 
 
 
+O K-Means é um algoritmo iterativo de aprendizado não supervisionado usado em tarefas de agrupamento para situações onde se conhece o número de "clusters" a se dividir o conjunto de dados. Basicamente,sua ideia consiste em definir o número k de grupos a serem obtidos e três vetores, chamados de "centroides", que representem o centro desses grupos de forma a servirem como referência na construção dos "clusters" pelo algoritmo. Definidos os "centroides", deve-se para cada instância de treinamento (com componentes reais) calcular a distância, por exemplo a distância Euclidiana, em relação aos k "centroides" previamente definidos, ficando a instância pertencente o grupo do "centroide" mais próximo. Deve-se repetir este passo, recalculando os centroides com as novas instâncias, até que se encontre convergência no agrupamento, ou seja, que não ocorra mais mudanças de "clusters" entre as instâncias. Esta convergência não necessariamente será encontrada de forma viável, podendo heurísticas ou aproximações serem utilizadas. Os passos básicos deste algoritmo estão abaixo.
+
+	Passo 1) Definir os K centroides iniciais.
+	Passo 2) Para cada instância, inseri-lá no grupo de centroide mais próximo.
+	Passo 3) Recalcular os K centroides com as novas instâncias integrantes do "cluster"
+	Passo 4) Repetir passos 2 e 3 até que não ocorra mais modificação de "clusters".
+
+O K-Means pode ser resumido como uma busca pela minimização de uma função objetivo, por exemplo em relação ao erro quadrático entre uma instância de treinamento X e os "centroides" dos grupos, de forma que para cada um dos K grupos e para cada uma das n instâncias de treinamento, obtém-se o menor erro quadrático em relação à distância de uma dada instância a um dado centroide, de forma que cada instância integre o "cluster" de centro mais próximo. Um exemplo de função F a ser minimizada seria:
+
+\begin{equation}
+F = \sum_{j=1}^{K} \sum_{i=1}^{n} {|{x}_{i}^{j} - c_{j}|}^2
+\end{equation}
+
 \subsubsection{{\b \it Expectation Maximization}}
 
 \section{Experimentos e Resultados}
@@ -252,7 +283,7 @@ A ideia dele é que elementos próximos, segundo uma função distância, são p
 
 \subsubsection{Árvore de Decisão}
 
-\subsubsection{{\b \it Naive Bayes}}
+\subsubsection{{\b \it Naïve-Bayes}}
 
 \subsubsection{Regressão}
 
